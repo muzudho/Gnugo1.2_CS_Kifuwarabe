@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{810D55DA-A0FB-47E9-B58E-F754314A018A}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Grayscale.GPL</RootNamespace>
+    <AssemblyName>Grayscale.GPL.P500_Gnugo1_2CS_</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\..\Builds\Engine\Bin\P500_Gnugo1_2CS_\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\..\Builds\Engine\Bin\P500_Gnugo1_2CS_\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="P160____Collection_\L500_Collection\GobanPointImpl.cs" />
+    <Compile Include="P160____Collection_\L500_Collection\GyoretuPointImpl.cs" />
+    <Compile Include="P190____Board______\L500_Util\Util_AboutBoard.cs" />
+    <Compile Include="P300____Taikyoku___\L250_Goban\GobanRectangleImpl.cs" />
+    <Compile Include="P320____Handicap___\L500_Handicap\Util_Handicap_9ziban.cs" />
+    <Compile Include="P480____Print______\L500_Print\N9zibanPrinterImpl.cs" />
+    <Compile Include="P500____Scenes_____\L500_Scenes\Scene_02_InstructionImpl.cs" />
+    <Compile Include="P500____Scenes_____\L500_Scenes\Scene_04_HandicapImpl.cs" />
+    <Compile Include="P500____Scenes_____\L500_Scenes\Scene_03_BoardSizeImpl.cs" />
+    <Compile Include="P___160_Collection_\L250_Rectangle\GobanRectangleA.cs" />
+    <Compile Include="P___160_Collection_\L500_Collection\GobanPoint.cs" />
+    <Compile Include="P___160_Collection_\L500_Collection\GyoretuPoint.cs" />
+    <Compile Include="P___170_GameState__\L500_Struct\GameState.cs" />
+    <Compile Include="P190____Board______\L125_WorkingBoard\CountedBoardImpl.cs" />
+    <Compile Include="P190____Board______\L125_WorkingBoard\MarkingBoardImpl.cs" />
+    <Compile Include="P190____Board______\L250_Board\BoardImpl.cs" />
+    <Compile Include="P300____Taikyoku___\L500_Taikyoku\TaikyokuImpl.cs" />
+    <Compile Include="P___181_BoardPrinterA\L500_BoardPrinterA\BoardPrinterA.cs" />
+    <Compile Include="P___190_Board______\L063_Word\CheckFlag_Ending.cs" />
+    <Compile Include="P___190_Board______\L063_Word\StoneColor.cs" />
+    <Compile Include="P___190_Board______\L125_WorkingBoard\CountedBoard.cs" />
+    <Compile Include="P___190_Board______\L125_WorkingBoard\MarkingBoard.cs" />
+    <Compile Include="P___190_Board______\L250_Board\Board.cs" />
+    <Compile Include="P___300_Taikyoku___\L250_Goban\GobanRectangleB.cs" />
+    <Compile Include="P___300_Taikyoku___\L500_Taikyoku\Taikyoku.cs" />
+    <Compile Include="P310____ConvStone__\L500_Conv\Conv_StoneColor.cs" />
+    <Compile Include="P340____Liberty____\L250_Liberty\Util_CountLiberty.cs" />
+    <Compile Include="P___405_CompZyoseki\L125_LocalZyoseki\LocalZyoseki_StoneAttribute.cs" />
+    <Compile Include="P___405_CompZyoseki\L500_FindPattern\MoveType.cs" />
+    <Compile Include="P409____ComputerB__\L500_Computer\ComputerPlayerBImpl.cs" />
+    <Compile Include="P___180_ComputerA__\L500_Computer\ComputerPlayerA.cs" />
+    <Compile Include="P___409_ComputerB__\L500_Computer\ComputerPlayerB.cs" />
+    <Compile Include="P460____SaveLoad___\L500_SaveLoad\Util_Load.cs" />
+    <Compile Include="P460____SaveLoad___\L500_SaveLoad\Util_Save.cs" />
+    <Compile Include="P490____EndOfGame__\L500_EndOfGame\Util_EndOfGame.cs" />
+    <Compile Include="P340____Liberty____\L500_LibertyAll\Util_CountLibertyAll.cs" />
+    <Compile Include="P350____RemoveStone\L500_RemoveStones\Util_RemoveStones_Surrounded.cs" />
+    <Compile Include="P490____EndOfGame__\L250_SeitiZi\Util_SeitiZi.cs" />
+    <Compile Include="P403____CompThink__\L125_SasiteNext\Util_SasiteNext.cs" />
+    <Compile Include="P403____CompThink__\L037_FindOpen\Util_FindOpen.cs" />
+    <Compile Include="P405____CompZyoseki\L500_FindOpeningZyoseki\Util_FindOpeningZyoseki.cs" />
+    <Compile Include="P403____CompThink__\L250_SasiteSaver\Util_SasiteSaver.cs" />
+    <Compile Include="P403____CompThink__\L500_SasiteWinner\Util_FindWinner.cs" />
+    <Compile Include="P403____CompThink__\L075_OwnEye\Util_OwnEye.cs" />
+    <Compile Include="P407____CompBestMov\L500_BestMove\Util_BestMove.cs" />
+    <Compile Include="P190____Board______\L260_PointFugo\PointFugoImpl.cs" />
+    <Compile Include="P470____KeyInput___\L500_CommandDriven\Util_CommandDriven.cs" />
+    <Compile Include="P405____CompZyoseki\L250_FindLocalZyoseki\Util_FindLocalZyoseki.cs" />
+    <Compile Include="P330____OpenZyoseki\L500_Opening\OpeningZyosekiImpl.cs" />
+    <Compile Include="P405____CompZyoseki\L075_EmptyRectangle\Util_EmptyRectangle.cs" />
+    <Compile Include="P320____Handicap___\L500_Handicap\Util_Handicap_19ziban.cs" />
+    <Compile Include="P480____Print______\L500_Print\N19zibanPrinterImpl.cs" />
+    <Compile Include="P500____Scenes_____\L500_Scenes\Scene_01_TitleImpl.cs" />
+    <Compile Include="P450____KeyValid___\L500_Suicide\Util_Suicide.cs" />
+    <Compile Include="P500____Scenes_____\L500_Scenes\Scene_99_EndOfGameImpl.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="P___480_Print______\L500_Print\BoardPrinterB.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="P_______／／Gnugo1.2のCSharp化\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="P900____Etc\ChangeLog%28Gnugo1.2%29.txt" />
+    <Content Include="P900____Etc\COPYING%28Gnugo1.2%29.txt" />
+    <Content Include="P900____Etc\Documentation%28Gnugo1.2%29.txt" />
+    <Content Include="P900____Etc\gnugo%28Gnugo1.2%29.mak.txt" />
+    <Content Include="P900____Etc\Makefile%28Gnugo1.2%29.txt" />
+    <Content Include="P900____Etc\objs%28Gnugo1.2%29.txt" />
+    <Compile Include="P405____CompZyoseki\L125_LocalZyoseki\Util_LocalZyoseki.cs" />
+    <Content Include="README%28Gnugo1.2%29.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
