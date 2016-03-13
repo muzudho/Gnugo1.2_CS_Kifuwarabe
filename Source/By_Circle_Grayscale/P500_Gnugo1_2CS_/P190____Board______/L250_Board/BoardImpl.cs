@@ -72,7 +72,7 @@ namespace Grayscale.GPL.P190____Board______.L250_Board
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        public StoneColor LookColor(GobanPoint location)
+        public StoneColor At(GobanPoint location)
         {
             return this.Position[location.I, location.J];
         }
@@ -82,7 +82,7 @@ namespace Grayscale.GPL.P190____Board______.L250_Board
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        public StoneColor LookColor_NorthOf(GobanPoint location)
+        public StoneColor NorthOf(GobanPoint location)
         {
             // Gnugo1.2 で、 p[m - 1][n] は北隣。
             return this.Position[location.I - 1, location.J];
@@ -93,7 +93,7 @@ namespace Grayscale.GPL.P190____Board______.L250_Board
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        public StoneColor LookColor_EastOf(GobanPoint location)
+        public StoneColor EastOf(GobanPoint location)
         {
             // Gnugo1.2 で、 p[m][n + 1] は東隣。
             return this.Position[location.I, location.J + 1];
@@ -104,7 +104,7 @@ namespace Grayscale.GPL.P190____Board______.L250_Board
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        public StoneColor LookColor_SouthOf(GobanPoint location)
+        public StoneColor SouthOf(GobanPoint location)
         {
             // Gnugo1.2 で、 p[m + 1][n] は南隣。
             return this.Position[location.I + 1, location.J];
@@ -115,7 +115,7 @@ namespace Grayscale.GPL.P190____Board______.L250_Board
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        public StoneColor LookColor_WestOf(GobanPoint location)
+        public StoneColor WestOf(GobanPoint location)
         {
             // Gnugo1.2 で、 p[m][n - 1] は西隣。
             return this.Position[location.I, location.J - 1];

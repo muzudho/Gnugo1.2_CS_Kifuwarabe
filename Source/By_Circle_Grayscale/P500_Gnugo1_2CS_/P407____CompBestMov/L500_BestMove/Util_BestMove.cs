@@ -79,17 +79,17 @@ namespace Grayscale.GPL.P407____CompBestMov.L500_BestMove
             out_bestMove = new GobanPointImpl(-1, -1);
             bestScore = -1;
 
-            // カレント色の石のリバティー（四方の石を置けるところ）
+            // カレント色の石（または連）のリバティー（四方の石を置けるところ）
             // 
             // Gnugo1.2 では、l という名前のグローバル変数。liberty の略だろうか？
             // eval で内容が設定され、その内容は exambord、findsavr、findwinr、suicideで使用されます。
-            int[,] libertyOfPiece_eachPoint;
+            int[,] liberty_forAllPoints;
 
             // 相手（人間）のそれぞれのピースのリバティーを再び数えます。
-            Util_CountLibertyAll.Count_LibertyOfPiece_EachPoint(out libertyOfPiece_eachPoint, taikyoku.YourColor, taikyoku);
+            Util_CountLibertyAll.Count_Liberty_ForAllPoint(out liberty_forAllPoints, taikyoku.YourColor, taikyoku);
 
             // 相手のピースを取ったり、攻めたりする手を探します。
-            if (Util_FindWinner.FindSasite(out tryLocation, out tryScore, libertyOfPiece_eachPoint, taikyoku))
+            if (Util_FindWinner.FindSasite(out tryLocation, out tryScore, liberty_forAllPoints, taikyoku))
             {
                 if (bestScore < tryScore) // 新しい最善手を見つけたなら
                 {
@@ -99,7 +99,7 @@ namespace Grayscale.GPL.P407____CompBestMov.L500_BestMove
             }
 
             // もし脅かされていれば、幾つかのピースを守ります。
-            if (Util_SasiteSaver.FindSasite(out tryLocation, out tryScore, libertyOfPiece_eachPoint, taikyoku))
+            if (Util_SasiteSaver.FindLocation_LibertyWeak(out tryLocation, out tryScore, liberty_forAllPoints, taikyoku))
             {
                 if (bestScore < tryScore) // 新しい最善手を見つけたなら
                 {
@@ -168,7 +168,7 @@ namespace Grayscale.GPL.P407____CompBestMov.L500_BestMove
                     }
 
                     // リバティーを数えなおし。
-                    Util_CountLiberty.Count_LibertyOfPiece(out count_libertyOfPiece, out_bestMove, taikyoku.MyColor, taikyoku);
+                    Util_CountLiberty.Count(out count_libertyOfPiece, out_bestMove, taikyoku.MyColor, taikyoku);
                     ++try_;
                 }
                 while
@@ -179,12 +179,12 @@ namespace Grayscale.GPL.P407____CompBestMov.L500_BestMove
                         // 次の３つの条件のどれかを満たすようなら、再トライします。
                         // （１）ベストムーブか空っぽだ。非合法手かも。
                         // （２）ピースのリバティーが 0～1 しかない。
-                        // （３）自分の目を埋める手なら。
-                        taikyoku.Goban.LookColor(out_bestMove) != StoneColor.Empty
+                        taikyoku.Goban.At(out_bestMove) != StoneColor.Empty
                         ||
                         count_libertyOfPiece < 2
                         ||
-                        Util_OwnEye.IsOwnEye(out_bestMove, taikyoku)
+                        // （３）自分の目を埋める手なら。
+                        Util_OwnEye.IsThis(out_bestMove, taikyoku)
                     )
                 );
             }

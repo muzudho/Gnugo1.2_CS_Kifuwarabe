@@ -95,7 +95,7 @@ namespace Grayscale.GPL.P470____KeyInput___.L500_CommandDriven
                         // 例えば、 a1 や、 T19 といった入力文字を解析し、盤上の位置に変換します。
                         !PointFugoImpl.TryParse(command_str, out out_sasite,taikyoku)
                         ||
-                        (taikyoku.Goban.LookColor(out_sasite) != StoneColor.Empty)
+                        (taikyoku.Goban.At(out_sasite) != StoneColor.Empty)
                         ||
                         Util_Suicide.Aa_Suicide(out_sasite, taikyoku)
                     )

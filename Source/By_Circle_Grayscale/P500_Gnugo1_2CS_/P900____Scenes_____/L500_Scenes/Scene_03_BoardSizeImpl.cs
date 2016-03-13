@@ -35,7 +35,7 @@ Please report any bug/fix, modification, suggestion to
 */
 using System;
 
-namespace Grayscale.GPL.P500____Scenes_____.L500_Scenes
+namespace Grayscale.GPL.P900____Scenes_____.L500_Scenes
 {
     public class Scene_03_BoardSizeImpl
     {

@@ -199,11 +199,11 @@ namespace Grayscale.GPL.P480____Print______.L500_Print
             for (int j = 0; j < 3; j++)
             {
                 GobanPoint location = new GobanPointImpl(i, j);
-                if (taikyoku.Goban.LookColor(location) == StoneColor.Empty)
+                if (taikyoku.Goban.At(location) == StoneColor.Empty)
                 {
                     sb.Append(" -");
                 }
-                else if (taikyoku.Goban.LookColor(location) == StoneColor.White)
+                else if (taikyoku.Goban.At(location) == StoneColor.White)
                 {
                     sb.Append(" O");
                 }
@@ -216,11 +216,11 @@ namespace Grayscale.GPL.P480____Print______.L500_Print
             {
                 int j = 3;
                 GobanPoint location = new GobanPointImpl(i, j);
-                if (taikyoku.Goban.LookColor(location) == StoneColor.Empty)
+                if (taikyoku.Goban.At(location) == StoneColor.Empty)
                 {
                     sb.Append(" +");
                 }
-                else if (taikyoku.Goban.LookColor(location) == StoneColor.White)
+                else if (taikyoku.Goban.At(location) == StoneColor.White)
                 {
                     sb.Append(" O");
                 }
@@ -233,11 +233,11 @@ namespace Grayscale.GPL.P480____Print______.L500_Print
             for (int j = 4; j < 9; j++)
             {
                 GobanPoint location = new GobanPointImpl(i, j);
-                if (taikyoku.Goban.LookColor(location) == StoneColor.Empty)
+                if (taikyoku.Goban.At(location) == StoneColor.Empty)
                 {
                     sb.Append(" -");
                 }
-                else if (taikyoku.Goban.LookColor(location) == StoneColor.White)
+                else if (taikyoku.Goban.At(location) == StoneColor.White)
                 {
                     sb.Append(" O");
                 }
@@ -250,11 +250,11 @@ namespace Grayscale.GPL.P480____Print______.L500_Print
             {
                 int j = 9;
                 GobanPoint location = new GobanPointImpl(i, j);
-                if (taikyoku.Goban.LookColor(location) == StoneColor.Empty)
+                if (taikyoku.Goban.At(location) == StoneColor.Empty)
                 {
                     sb.Append(" +");
                 }
-                else if (taikyoku.Goban.LookColor(location) == StoneColor.White)
+                else if (taikyoku.Goban.At(location) == StoneColor.White)
                 {
                     sb.Append(" O");
                 }
@@ -267,11 +267,11 @@ namespace Grayscale.GPL.P480____Print______.L500_Print
             for (int j = 10; j < 15; j++)
             {
                 GobanPoint location = new GobanPointImpl(i, j);
-                if (taikyoku.Goban.LookColor(location) == StoneColor.Empty)
+                if (taikyoku.Goban.At(location) == StoneColor.Empty)
                 {
                     sb.Append(" -");
                 }
-                else if (taikyoku.Goban.LookColor(location) == StoneColor.White)
+                else if (taikyoku.Goban.At(location) == StoneColor.White)
                 {
                     sb.Append(" O");
                 }
@@ -284,11 +284,11 @@ namespace Grayscale.GPL.P480____Print______.L500_Print
             {
                 int j = 15;
                 GobanPoint location = new GobanPointImpl(i, j);
-                if (taikyoku.Goban.LookColor(location) == StoneColor.Empty)
+                if (taikyoku.Goban.At(location) == StoneColor.Empty)
                 {
                     sb.Append(" +");
                 }
-                else if (taikyoku.Goban.LookColor(location) == StoneColor.White)
+                else if (taikyoku.Goban.At(location) == StoneColor.White)
                 {
                     sb.Append(" O");
                 }
@@ -301,11 +301,11 @@ namespace Grayscale.GPL.P480____Print______.L500_Print
             for (int j = 16; j < taikyoku.GobanBounds.BoardSize; j++)
             {
                 GobanPoint location = new GobanPointImpl(i, j);
-                if (taikyoku.Goban.LookColor(location) == StoneColor.Empty)
+                if (taikyoku.Goban.At(location) == StoneColor.Empty)
                 {
                     sb.Append(" -");
                 }
-                else if (taikyoku.Goban.LookColor(location) == StoneColor.White)
+                else if (taikyoku.Goban.At(location) == StoneColor.White)
                 {
                     sb.Append(" O");
                 }
@@ -331,11 +331,11 @@ namespace Grayscale.GPL.P480____Print______.L500_Print
             for (int j = 0; j < taikyoku.GobanBounds.BoardSize; j++)
             {
                 GobanPoint stoneLocation = new GobanPointImpl(i, j);
-                if (taikyoku.Goban.LookColor(stoneLocation) == StoneColor.Empty)
+                if (taikyoku.Goban.At(stoneLocation) == StoneColor.Empty)
                 {
                     sb.Append(" -");
                 }
-                else if (taikyoku.Goban.LookColor(stoneLocation) == StoneColor.White)
+                else if (taikyoku.Goban.At(stoneLocation) == StoneColor.White)
                 {
                     sb.Append(" O");
                 }

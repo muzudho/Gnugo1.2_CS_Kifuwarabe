@@ -44,38 +44,38 @@ namespace Grayscale.GPL.P340____Liberty____.L500_LibertyAll
     public abstract class Util_CountLibertyAll
     {
         /// <summary>
-        /// 評価関数というよりは、盤上のつながった同じ色の石のリバティーを数えています。
+        /// 盤上の全交点に、その場所の石（または連）の呼吸点の数を埋めます。
+        /// 連の場合、最初の１つの交点にこの数字は記録されます。
         ///
         /// Gnugo1.2 では、eval 関数。
         /// </summary>
-        /// <param name="libertyOfPiece_eachPoint">
-        /// 同じ色の石のつながっている部分（piece）のリバティー（四方の石を置けるところ）を数えます。
-        /// ピースのうち、最初に指定した１つに この数字は記録されます。
-        /// 
+        /// <param name="liberty_eachPoint">
         /// Gnugo1.2 では、l という名前のグローバル変数。liberty の略だろうか？
         /// eval で内容が設定され、その内容は exambord、findsavr、findwinr、suicideで使用されます。
         /// </param>
         /// <param name="color">黒 or 白</param>
-        public static void Count_LibertyOfPiece_EachPoint
+        public static void Count_Liberty_ForAllPoint
         (
-            out int[,] libertyOfPiece_eachPoint,
+            out int[,] liberty_eachPoint,
             StoneColor color,
             Taikyoku taikyoku
         )
         {
-            libertyOfPiece_eachPoint = new int[taikyoku.GobanBounds.BoardSize, taikyoku.GobanBounds.BoardSize];
+            int banSize = taikyoku.GobanBounds.BoardSize; // 何路盤
+
+            liberty_eachPoint = new int[taikyoku.GobanBounds.BoardSize, taikyoku.GobanBounds.BoardSize];
 
             // それぞれのピースのリバティーを数えます。
-            for (int i = 0; i < taikyoku.GobanBounds.BoardSize; i++)
+            for (int i = 0; i < banSize; i++)
             {
-                for (int j = 0; j < taikyoku.GobanBounds.BoardSize; j++)
+                for (int j = 0; j < banSize; j++)
                 {
-                    GobanPoint location = new GobanPointImpl(i, j);
-                    if (taikyoku.Goban.LookColor(location) == color)// 指定の色のみ
+                    GobanPoint iLocation = new GobanPointImpl(i, j);
+                    if (taikyoku.Goban.At(iLocation) == color)// 指定の色のみ
                     {
-                        int libertyOfPiece; // Gnugo1.2 では、グローバル変数 lib = 0 でした。
-                        Util_CountLiberty.Count_LibertyOfPiece(out libertyOfPiece, location, color, taikyoku);
-                        libertyOfPiece_eachPoint[i, j] = libertyOfPiece;
+                        int liberty; // Gnugo1.2 では、グローバル変数 lib = 0 でした。
+                        Util_CountLiberty.Count(out liberty, iLocation, color, taikyoku);
+                        liberty_eachPoint[i, j] = liberty;
                     }
                 }
             }

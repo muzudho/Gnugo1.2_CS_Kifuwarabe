@@ -34,6 +34,7 @@ Please report any bug/fix, modification, suggestion to
            manli@cs.uh.edu
 */
 using Grayscale.GPL.P___160_Collection_.L500_Collection;
+using Grayscale.GPL.P___190_Board______.L250_Board;
 using Grayscale.GPL.P___300_Taikyoku___.L500_Taikyoku;
 using Grayscale.GPL.P160____Collection_.L500_Collection;
 
@@ -54,12 +55,14 @@ namespace Grayscale.GPL.P403____CompThink__.L075_OwnEye
         /// <param name="location">Gnugo1.2 では、石の 行番号 i = 0～18、列番号 j = 0～18。</param>
         /// <param name="taikyoku"></param>
         /// <returns></returns>
-        public static bool IsOwnEye
+        public static bool IsThis
         (
             GobanPoint location,
             Taikyoku taikyoku
         )
         {
+            Board ban = taikyoku.Goban; // 碁盤
+
             // 上辺を調べます。
             if (location.IsNorthEnd())
             {
@@ -68,9 +71,9 @@ namespace Grayscale.GPL.P403____CompThink__.L075_OwnEye
                     location.IsWestEnd()    // 北西の角
                     &&
                     // 北西の隅を囲む２つの石が自分（コンピューター）の色なら。
-                    taikyoku.Goban.LookColor(new GobanPointImpl(1, 0)) == taikyoku.MyColor
+                    ban.At(new GobanPointImpl(1, 0)) == taikyoku.MyColor
                     &&
-                    taikyoku.Goban.LookColor(new GobanPointImpl(0, 1)) == taikyoku.MyColor
+                    ban.At(new GobanPointImpl(0, 1)) == taikyoku.MyColor
                 )
                 {
                     return true;
@@ -80,9 +83,9 @@ namespace Grayscale.GPL.P403____CompThink__.L075_OwnEye
                     location.IsEastEnd(taikyoku.GobanBounds)   // 北東角
                     &&
                     // 北東の隅を囲む２つの石が自分（コンピューター）の色なら。
-                    taikyoku.Goban.LookColor(new GobanPointImpl(1, taikyoku.GobanBounds.BoardEnd)) == taikyoku.MyColor
+                    ban.At(new GobanPointImpl(1, taikyoku.GobanBounds.BoardEnd)) == taikyoku.MyColor
                     &&
-                    taikyoku.Goban.LookColor(new GobanPointImpl(0, taikyoku.GobanBounds.BoardEnd-1)) == taikyoku.MyColor
+                    ban.At(new GobanPointImpl(0, taikyoku.GobanBounds.BoardEnd-1)) == taikyoku.MyColor
                 )
                 {
                     return true;
@@ -91,12 +94,12 @@ namespace Grayscale.GPL.P403____CompThink__.L075_OwnEye
                 if
                 (
                     // 上辺で、３方向がコンピューターの石なら
-                    taikyoku.Goban.LookColor(new GobanPointImpl(1, location.J)) == taikyoku.MyColor // コンピューターの石
+                    ban.At(new GobanPointImpl(1, location.J)) == taikyoku.MyColor // コンピューターの石
                     &&
                     // 左右ともコンピューターの石
-                    taikyoku.Goban.LookColor(new GobanPointImpl(0, location.J - 1)) == taikyoku.MyColor
+                    ban.At(new GobanPointImpl(0, location.J - 1)) == taikyoku.MyColor
                     &&
-                    taikyoku.Goban.LookColor(new GobanPointImpl(0, location.J + 1)) == taikyoku.MyColor
+                    ban.At(new GobanPointImpl(0, location.J + 1)) == taikyoku.MyColor
                 )
                 {
                     return true;
@@ -115,9 +118,9 @@ namespace Grayscale.GPL.P403____CompThink__.L075_OwnEye
                     location.IsWestEnd()    // 南西角
                     &&
                     // 南西の隅を囲む２つの石がコンピューターの色なら。
-                    taikyoku.Goban.LookColor(new GobanPointImpl(taikyoku.GobanBounds.BoardEnd-1, 0)) == taikyoku.MyColor
+                    ban.At(new GobanPointImpl(taikyoku.GobanBounds.BoardEnd-1, 0)) == taikyoku.MyColor
                     &&
-                    taikyoku.Goban.LookColor(new GobanPointImpl(taikyoku.GobanBounds.BoardEnd, 1)) == taikyoku.MyColor
+                    ban.At(new GobanPointImpl(taikyoku.GobanBounds.BoardEnd, 1)) == taikyoku.MyColor
                 )
                 {
                     return true;
@@ -128,9 +131,9 @@ namespace Grayscale.GPL.P403____CompThink__.L075_OwnEye
                     location.IsEastEnd(taikyoku.GobanBounds)   // 南東
                     &&
                     // 南東の隅を囲む２つの石がコンピューターの色なら。
-                    taikyoku.Goban.LookColor(new GobanPointImpl(taikyoku.GobanBounds.BoardEnd - 1, taikyoku.GobanBounds.BoardEnd)) == taikyoku.MyColor
+                    ban.At(new GobanPointImpl(taikyoku.GobanBounds.BoardEnd - 1, taikyoku.GobanBounds.BoardEnd)) == taikyoku.MyColor
                     &&
-                    taikyoku.Goban.LookColor(new GobanPointImpl(taikyoku.GobanBounds.BoardEnd, taikyoku.GobanBounds.BoardEnd-1)) == taikyoku.MyColor
+                    ban.At(new GobanPointImpl(taikyoku.GobanBounds.BoardEnd, taikyoku.GobanBounds.BoardEnd-1)) == taikyoku.MyColor
                 )
                 {
                     return true;
@@ -139,11 +142,11 @@ namespace Grayscale.GPL.P403____CompThink__.L075_OwnEye
                 if
                 (
                     // 下辺で、３方向がコンピューターの石なら
-                    taikyoku.Goban.LookColor(new GobanPointImpl(taikyoku.GobanBounds.BoardEnd-1, location.J)) == taikyoku.MyColor
+                    ban.At(new GobanPointImpl(taikyoku.GobanBounds.BoardEnd-1, location.J)) == taikyoku.MyColor
                     &&
-                    taikyoku.Goban.LookColor(new GobanPointImpl(taikyoku.GobanBounds.BoardEnd, location.J - 1)) == taikyoku.MyColor
+                    ban.At(new GobanPointImpl(taikyoku.GobanBounds.BoardEnd, location.J - 1)) == taikyoku.MyColor
                     &&
-                    taikyoku.Goban.LookColor(new GobanPointImpl(taikyoku.GobanBounds.BoardEnd, location.J + 1)) == taikyoku.MyColor
+                    ban.At(new GobanPointImpl(taikyoku.GobanBounds.BoardEnd, location.J + 1)) == taikyoku.MyColor
                 )
                 {
                     return true;
@@ -160,11 +163,11 @@ namespace Grayscale.GPL.P403____CompThink__.L075_OwnEye
                 if
                 (
                     // 左辺で、３方向がコンピューターの石なら
-                    taikyoku.Goban.LookColor(new GobanPointImpl(location.I, 1)) == taikyoku.MyColor
+                    ban.At(new GobanPointImpl(location.I, 1)) == taikyoku.MyColor
                     &&
-                    taikyoku.Goban.LookColor(new GobanPointImpl(location.I - 1, 0)) == taikyoku.MyColor
+                    ban.At(new GobanPointImpl(location.I - 1, 0)) == taikyoku.MyColor
                     &&
-                    taikyoku.Goban.LookColor(new GobanPointImpl(location.I + 1, 0)) == taikyoku.MyColor
+                    ban.At(new GobanPointImpl(location.I + 1, 0)) == taikyoku.MyColor
                 )
                 {
                     return true;
@@ -181,11 +184,11 @@ namespace Grayscale.GPL.P403____CompThink__.L075_OwnEye
                 if
                 (
                     // 右辺で、３方向がコンピューターの石なら
-                    taikyoku.Goban.LookColor(new GobanPointImpl(location.I, taikyoku.GobanBounds.BoardEnd-1)) == taikyoku.MyColor
+                    ban.At(new GobanPointImpl(location.I, taikyoku.GobanBounds.BoardEnd-1)) == taikyoku.MyColor
                     &&
-                    taikyoku.Goban.LookColor(new GobanPointImpl(location.I - 1, taikyoku.GobanBounds.BoardEnd)) == taikyoku.MyColor
+                    ban.At(new GobanPointImpl(location.I - 1, taikyoku.GobanBounds.BoardEnd)) == taikyoku.MyColor
                     &&
-                    taikyoku.Goban.LookColor(new GobanPointImpl(location.I + 1, taikyoku.GobanBounds.BoardEnd)) == taikyoku.MyColor
+                    ban.At(new GobanPointImpl(location.I + 1, taikyoku.GobanBounds.BoardEnd)) == taikyoku.MyColor
                 )
                 {
                     return true;
@@ -200,13 +203,13 @@ namespace Grayscale.GPL.P403____CompThink__.L075_OwnEye
             if
             (
                 // ４方向がコンピューターの石なら
-                taikyoku.Goban.LookColor_NorthOf(location) == taikyoku.MyColor
+                ban.NorthOf(location) == taikyoku.MyColor
                 &&
-                taikyoku.Goban.LookColor_EastOf(location) == taikyoku.MyColor
+                ban.EastOf(location) == taikyoku.MyColor
                 &&
-                taikyoku.Goban.LookColor_SouthOf(location) == taikyoku.MyColor
+                ban.SouthOf(location) == taikyoku.MyColor
                 &&
-                taikyoku.Goban.LookColor_WestOf(location) == taikyoku.MyColor
+                ban.WestOf(location) == taikyoku.MyColor
             )
             {
                 return true;

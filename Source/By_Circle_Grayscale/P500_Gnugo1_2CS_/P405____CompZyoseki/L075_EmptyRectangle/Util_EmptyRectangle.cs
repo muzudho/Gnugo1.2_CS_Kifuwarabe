@@ -88,7 +88,7 @@ namespace Grayscale.GPL.P405____CompZyoseki.L075_EmptyRectangle
             {
                 for (x = minx; x <= maxx; x++)
                 {
-                    if (taikyoku.Goban.LookColor(new GobanPointImpl(y, x)) != StoneColor.Empty)
+                    if (taikyoku.Goban.At(new GobanPointImpl(y, x)) != StoneColor.Empty)
                     {
                         return false;
                     }

@@ -65,8 +65,8 @@ namespace Grayscale.GPL.P350____RemoveStone.L500_RemoveStones
             //
             // その地点が、四方でつながっている石のかたまり（piece）のとき、
             // そのピース全体でのリバティーを数え、ポイントの１つ１つにその数字を覚えさせます。
-            int[,] libertyOfPiece_eachPoint;           
-            Util_CountLibertyAll.Count_LibertyOfPiece_EachPoint(out libertyOfPiece_eachPoint, colorKo, taikyoku);
+            int[,] liberty_forAllPoints;           
+            Util_CountLibertyAll.Count_Liberty_ForAllPoint(out liberty_forAllPoints, colorKo, taikyoku);
 
             // 取った石の位置を初期化します。（コウで戻さなくてはならない石の位置を覚えていたもの）
             if (colorKo == taikyoku.MyColor)
@@ -93,10 +93,10 @@ namespace Grayscale.GPL.P350____RemoveStone.L500_RemoveStones
                     if
                     (
                         // 取られる側の石であり、
-                        taikyoku.Goban.LookColor(location) == colorKo
+                        taikyoku.Goban.At(location) == colorKo
                         &&
                         // ピースのリバティーが記録されていないなら
-                        libertyOfPiece_eachPoint[i,j] == 0
+                        liberty_forAllPoints[i,j] == 0
                     )
                     {
                         // 石を除外します。

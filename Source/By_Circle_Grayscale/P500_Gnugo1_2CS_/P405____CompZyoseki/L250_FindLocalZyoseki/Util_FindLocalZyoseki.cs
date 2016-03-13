@@ -214,7 +214,7 @@ namespace Grayscale.GPL.P405____CompZyoseki.L250_FindLocalZyoseki
                         switch (Util_LocalZyoseki.Patterns[ptnNo].Stones[k].Att)
                         {
                             case LocalZyoseki_StoneAttribute._0_Empty :
-                                if (taikyoku.Goban.LookColor(mnLocation) == StoneColor.Empty)    /* open */
+                                if (taikyoku.Goban.At(mnLocation) == StoneColor.Empty)    /* open */
                                 {
                                     break;
                                 }
@@ -224,7 +224,7 @@ namespace Grayscale.GPL.P405____CompZyoseki.L250_FindLocalZyoseki
                                     break;
                                 }
                             case LocalZyoseki_StoneAttribute._1_YourPiece:
-                                if (taikyoku.Goban.LookColor(mnLocation) == taikyoku.YourColor)  /* your piece */
+                                if (taikyoku.Goban.At(mnLocation) == taikyoku.YourColor)  /* your piece */
                                 {
                                     break;
                                 }
@@ -234,7 +234,7 @@ namespace Grayscale.GPL.P405____CompZyoseki.L250_FindLocalZyoseki
                                     break;
                                 }
                             case LocalZyoseki_StoneAttribute._2_MyPiece:
-                                if (taikyoku.Goban.LookColor(mnLocation) == taikyoku.MyColor)  /* my piece */
+                                if (taikyoku.Goban.At(mnLocation) == taikyoku.MyColor)  /* my piece */
                                 {
                                     break;
                                 }
@@ -244,10 +244,10 @@ namespace Grayscale.GPL.P405____CompZyoseki.L250_FindLocalZyoseki
                                     break;
                                 }
                             case LocalZyoseki_StoneAttribute._3_MyNextMove:
-                                if (taikyoku.Goban.LookColor(mnLocation) == StoneColor.Empty)    /* open for new move */
+                                if (taikyoku.Goban.At(mnLocation) == StoneColor.Empty)    /* open for new move */
                                 {
                                     int libertyOfPiece; // Gnugo1.2 では、グローバル変数 lib = 0 でした。
-                                    Util_CountLiberty.Count_LibertyOfPiece(out libertyOfPiece, mnLocation, taikyoku.MyColor, taikyoku);    /* check liberty */
+                                    Util_CountLiberty.Count(out libertyOfPiece, mnLocation, taikyoku.MyColor, taikyoku);    /* check liberty */
                                     if (1 < libertyOfPiece)  /* move o.k. */
                                     {
                                         tryLocation.SetLocation(my,nx);
@@ -267,7 +267,7 @@ namespace Grayscale.GPL.P405____CompZyoseki.L250_FindLocalZyoseki
                             case LocalZyoseki_StoneAttribute._4_EmptyOnEdge:
                                 if
                                 (
-                                    taikyoku.Goban.LookColor(mnLocation) == StoneColor.Empty  /* open on edge */
+                                    taikyoku.Goban.At(mnLocation) == StoneColor.Empty  /* open on edge */
                                     &&
                                     (
                                         Util_AboutBoard.On_Edge(my, taikyoku.GobanBounds) || Util_AboutBoard.On_Edge(nx, taikyoku.GobanBounds)
@@ -284,7 +284,7 @@ namespace Grayscale.GPL.P405____CompZyoseki.L250_FindLocalZyoseki
                             case LocalZyoseki_StoneAttribute._5_YourPieceOnEdge:
                                 if
                                 (
-                                    taikyoku.Goban.LookColor(mnLocation) == taikyoku.YourColor  /* your piece on edge */
+                                    taikyoku.Goban.At(mnLocation) == taikyoku.YourColor  /* your piece on edge */
                                     &&
                                     (
                                         Util_AboutBoard.On_Edge(my, taikyoku.GobanBounds) || Util_AboutBoard.On_Edge(nx, taikyoku.GobanBounds)
@@ -301,7 +301,7 @@ namespace Grayscale.GPL.P405____CompZyoseki.L250_FindLocalZyoseki
                             case LocalZyoseki_StoneAttribute._6_MyPieceOnEdge:
                                 if
                                 (
-                                    taikyoku.Goban.LookColor(mnLocation) == taikyoku.MyColor  /* my piece on edge */
+                                    taikyoku.Goban.At(mnLocation) == taikyoku.MyColor  /* my piece on edge */
                                     &&
                                     (
                                         Util_AboutBoard.On_Edge(my, taikyoku.GobanBounds) || Util_AboutBoard.On_Edge(nx, taikyoku.GobanBounds)

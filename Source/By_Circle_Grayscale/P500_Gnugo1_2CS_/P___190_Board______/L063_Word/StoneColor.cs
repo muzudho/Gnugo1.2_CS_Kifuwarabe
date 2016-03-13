@@ -60,6 +60,12 @@ namespace Grayscale.GPL.P___190_Board______.L063_Word
         /// 
         /// Gnugo1.2 では、#define を使って BLACK定数 2 と定義されている。
         /// </summary>
-        Black = 2
+        Black = 2,
+
+        /// <summary>
+        /// Gungo1.2 では使っていないが、cgfgoban,cgfthinkで使っているので
+        /// 合わせてみた。
+        /// </summary>
+        Waku = 3
     }
 }

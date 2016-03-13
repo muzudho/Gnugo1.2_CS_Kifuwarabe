@@ -38,7 +38,7 @@ using Grayscale.GPL.P___480_Print______.L500_Print;
 using Grayscale.GPL.P320____Handicap___.L500_Handicap;
 using System;
 
-namespace Grayscale.GPL.P500____Scenes_____.L500_Scenes
+namespace Grayscale.GPL.P900____Scenes_____.L500_Scenes
 {
     public class Scene_04_HandicapImpl
     {

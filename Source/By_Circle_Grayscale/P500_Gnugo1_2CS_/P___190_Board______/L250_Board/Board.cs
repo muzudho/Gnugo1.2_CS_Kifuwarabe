@@ -60,34 +60,34 @@ namespace Grayscale.GPL.P___190_Board______.L250_Board
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        StoneColor LookColor(GobanPoint location);
+        StoneColor At(GobanPoint location);
 
         /// <summary>
         /// 指定の交点の北側の石の色を見ます。
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        StoneColor LookColor_NorthOf(GobanPoint location);
+        StoneColor NorthOf(GobanPoint location);
 
         /// <summary>
         /// 指定の交点の東側の石の色を見ます。
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        StoneColor LookColor_EastOf(GobanPoint location);
+        StoneColor EastOf(GobanPoint location);
 
         /// <summary>
         /// 指定の交点の南側の石の色を見ます。
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        StoneColor LookColor_SouthOf(GobanPoint location);
+        StoneColor SouthOf(GobanPoint location);
 
         /// <summary>
         /// 指定の交点の西側の石の色を見ます。
         /// </summary>
         /// <param name="location"></param>
         /// <returns></returns>
-        StoneColor LookColor_WestOf(GobanPoint location);
+        StoneColor WestOf(GobanPoint location);
     }
 }

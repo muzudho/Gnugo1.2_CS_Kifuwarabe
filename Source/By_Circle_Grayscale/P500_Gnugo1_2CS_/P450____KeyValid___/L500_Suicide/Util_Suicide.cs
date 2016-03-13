@@ -60,7 +60,7 @@ namespace Grayscale.GPL.P450____KeyValid___.L500_Suicide
         {
             // 新しい動きのリバティーを数えなおします。
             int libertyOfPiece; // Gnugo1.2 では、グローバル変数 lib = 0 でした。
-            Util_CountLiberty.Count_LibertyOfPiece(out libertyOfPiece, location, taikyoku.YourColor, taikyoku);
+            Util_CountLiberty.Count(out libertyOfPiece, location, taikyoku.YourColor, taikyoku);
             if (libertyOfPiece == 0)
             // 調べて、もしコンピューターのピースズを殺して、コの可能性があれば、
             // 新しい動きは自殺手です。
@@ -72,10 +72,10 @@ namespace Grayscale.GPL.P450____KeyValid___.L500_Suicide
                 // 
                 // Gnugo1.2 では、l という名前のグローバル変数。liberty の略だろうか？
                 // eval で内容が設定され、その内容は exambord、findsavr、findwinr、suicideで使用されます。
-                int[,] libertyOfPiece_eachPoint;
+                int[,] liberty_forAllPoints;
 
                 // コンピューターのそれぞれのピースのリバティーを数えます。
-                Util_CountLibertyAll.Count_LibertyOfPiece_EachPoint(out libertyOfPiece_eachPoint, taikyoku.MyColor, taikyoku);
+                Util_CountLibertyAll.Count_Liberty_ForAllPoint(out liberty_forAllPoints, taikyoku.MyColor, taikyoku);
                 int k = 0;
 
                 for (int m = 0; m < taikyoku.GobanBounds.BoardSize; m++)
@@ -85,9 +85,9 @@ namespace Grayscale.GPL.P450____KeyValid___.L500_Suicide
                         // 殺されるかもしれないピースズを数えます。
                         if
                         (
-                            (taikyoku.Goban.LookColor(new GobanPointImpl(m, n)) == taikyoku.MyColor)
+                            (taikyoku.Goban.At(new GobanPointImpl(m, n)) == taikyoku.MyColor)
                             &&
-                            libertyOfPiece_eachPoint[m,n] == 0
+                            liberty_forAllPoints[m,n] == 0
                         )
                         {
                             ++k;

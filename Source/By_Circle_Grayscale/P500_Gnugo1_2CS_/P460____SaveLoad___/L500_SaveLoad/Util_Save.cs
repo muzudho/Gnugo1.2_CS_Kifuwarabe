@@ -62,7 +62,7 @@ namespace Grayscale.GPL.P460____SaveLoad___.L500_SaveLoad
             {
                 for (int n = 0; n < taikyoku.GobanBounds.BoardSize; n++)
                 {
-                    sb.Append(Conv_StoneColor.ToNumber(taikyoku.Goban.LookColor(new GobanPointImpl(m, n))));
+                    sb.Append(Conv_StoneColor.ToNumber(taikyoku.Goban.At(new GobanPointImpl(m, n))));
                     //fprintf(fp, "%c", Util_GlobalVar.P[m,n]);
                 }
             }

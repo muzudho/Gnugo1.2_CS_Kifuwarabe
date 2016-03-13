@@ -93,7 +93,7 @@ namespace Grayscale.GPL.P403____CompThink__.L500_SasiteWinner
                     GobanPoint location = new GobanPointImpl(m, n);
                     if (
                         // 相手（人間）の石が置いてあり。
-                        taikyoku.Goban.LookColor(location) == taikyoku.YourColor
+                        taikyoku.Goban.At(location) == taikyoku.YourColor
                         &&
                         // リバティーが 3以下。
                         libertyOfPiece_eachPoint[m, n] < 4
@@ -129,7 +129,7 @@ namespace Grayscale.GPL.P403____CompThink__.L500_SasiteWinner
                                         if (u != v)
                                         {
                                             int libertyOfPiece_a; // Gnugo1.2 では、グローバル変数 lib = 0 でした。
-                                            Util_CountLiberty.Count_LibertyOfPiece(out libertyOfPiece_a, trayLocations[u], taikyoku.MyColor, taikyoku);
+                                            Util_CountLiberty.Count(out libertyOfPiece_a, trayLocations[u], taikyoku.MyColor, taikyoku);
                                             if (0 < libertyOfPiece_a)    // 妥当な動き
                                             {
                                                 // コンピューターの色の石を（試しに）置きます。
@@ -137,7 +137,7 @@ namespace Grayscale.GPL.P403____CompThink__.L500_SasiteWinner
                                         
                                                 // look ahead opponent move
                                                 int libertyOfPiece_b; // Gnugo1.2 では、グローバル変数 lib = 0 でした。
-                                                Util_CountLiberty.Count_LibertyOfPiece(out libertyOfPiece_b, trayLocations[v], taikyoku.YourColor, taikyoku);
+                                                Util_CountLiberty.Count(out libertyOfPiece_b, trayLocations[v], taikyoku.YourColor, taikyoku);
                                                 if
                                                 (
                                                     1 == libertyOfPiece_a

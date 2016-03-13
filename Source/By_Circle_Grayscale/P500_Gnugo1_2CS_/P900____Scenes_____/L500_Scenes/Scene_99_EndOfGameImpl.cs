@@ -39,7 +39,7 @@ using Grayscale.GPL.P___480_Print______.L500_Print;
 using Grayscale.GPL.P490____EndOfGame__.L500_EndOfGame;
 using System;
 
-namespace Grayscale.GPL.P500____Scenes_____.L500_Scenes
+namespace Grayscale.GPL.P900____Scenes_____.L500_Scenes
 {
     /// <summary>
     /// ゲーム終了後のシーン進行です。

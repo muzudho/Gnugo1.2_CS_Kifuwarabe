@@ -85,9 +85,9 @@ namespace Grayscale.GPL.P490____EndOfGame__.L250_SeitiZi
             //
             // 指定した盤上の位置に石があれば、その色を返します。
             //
-            if (taikyoku.Goban.LookColor(location) != StoneColor.Empty)
+            if (taikyoku.Goban.At(location) != StoneColor.Empty)
             {
-                return taikyoku.Goban.LookColor(location);
+                return taikyoku.Goban.At(location);
             }
 
             // 北ネイバーを、石に突き当たるまで調べます。
@@ -100,11 +100,11 @@ namespace Grayscale.GPL.P490____EndOfGame__.L250_SeitiZi
                     --k;
                 }
                 while (
-                    taikyoku.Goban.LookColor(new GobanPointImpl(k, location.J)) == StoneColor.Empty
+                    taikyoku.Goban.At(new GobanPointImpl(k, location.J)) == StoneColor.Empty
                     &&
                     0 < k
                 );
-                color[0] = taikyoku.Goban.LookColor(new GobanPointImpl(k, location.J));
+                color[0] = taikyoku.Goban.At(new GobanPointImpl(k, location.J));
             }
             else
             {
@@ -123,11 +123,11 @@ namespace Grayscale.GPL.P490____EndOfGame__.L250_SeitiZi
                 }
                 while
                 (
-                    taikyoku.Goban.LookColor(new GobanPointImpl(k, location.J)) == StoneColor.Empty
+                    taikyoku.Goban.At(new GobanPointImpl(k, location.J)) == StoneColor.Empty
                     &&
                     k < taikyoku.GobanBounds.BoardEnd
                 );
-                color[1] = taikyoku.Goban.LookColor(new GobanPointImpl(k, location.J));
+                color[1] = taikyoku.Goban.At(new GobanPointImpl(k, location.J));
             }
             else
             {
@@ -146,11 +146,11 @@ namespace Grayscale.GPL.P490____EndOfGame__.L250_SeitiZi
                 }
                 while
                 (
-                    taikyoku.Goban.LookColor(new GobanPointImpl(location.I, k)) == StoneColor.Empty
+                    taikyoku.Goban.At(new GobanPointImpl(location.I, k)) == StoneColor.Empty
                     &&
                     k > 0
                 );
-                color[2] = taikyoku.Goban.LookColor(new GobanPointImpl(location.I, k));
+                color[2] = taikyoku.Goban.At(new GobanPointImpl(location.I, k));
             }
             else
             {
@@ -169,11 +169,11 @@ namespace Grayscale.GPL.P490____EndOfGame__.L250_SeitiZi
                 }
                 while
                 (
-                    taikyoku.Goban.LookColor(new GobanPointImpl(location.I, k)) == StoneColor.Empty
+                    taikyoku.Goban.At(new GobanPointImpl(location.I, k)) == StoneColor.Empty
                     &&
                     k < taikyoku.GobanBounds.BoardEnd
                 );
-                color[3] = taikyoku.Goban.LookColor(new GobanPointImpl(location.I, k));
+                color[3] = taikyoku.Goban.At(new GobanPointImpl(location.I, k));
             }
             else
             {

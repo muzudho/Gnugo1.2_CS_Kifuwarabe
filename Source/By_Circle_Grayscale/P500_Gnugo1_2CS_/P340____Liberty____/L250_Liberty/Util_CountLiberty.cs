@@ -43,18 +43,18 @@ namespace Grayscale.GPL.P340____Liberty____.L250_Liberty
     public abstract class Util_CountLiberty
     {
         /// <summary>
-        /// 碁盤の指定の交点 i,j にある石を起点に、つながっている同じ色の石の総リバーティを数えます。
+        /// 碁盤の指定の交点 i,j にある石を起点に、つながっている同じ色の石の（１つ、または連の）総リバーティを数えます。
         /// 再帰的に呼び出されます。
         /// Countlib関数から呼び出してください。
         /// 
         /// Gnugo1.2 では、count関数です。
         /// </summary>
-        /// <param name="libertyOfPiece">Gnugo1.2 では、グローバル変数 lib でした。</param>
+        /// <param name="count">Gnugo1.2 では、グローバル変数 lib でした。</param>
         /// <param name="location">Gnugo1.2では、行番号 i = 0～18、列番号 j = 0～18。</param>
         /// <param name="color">黒 or 白</param>
         /// <param name="taikyoku"></param>
-        private static void Count_Liberty_Recursive(
-            ref int libertyOfPiece,
+        private static void Count_Recursive(
+            ref int count,
             GobanPoint location,
             StoneColor color,
             Taikyoku taikyoku
@@ -76,26 +76,26 @@ namespace Grayscale.GPL.P340____Liberty____.L250_Liberty
             {
                 if
                 (
-                    taikyoku.Goban.LookColor_NorthOf(location) == StoneColor.Empty
+                    taikyoku.Goban.NorthOf(location) == StoneColor.Empty
                     &&
                     taikyoku.CountedBoard.CanDo_North(location)
                 )
                 {
                     // 北隣が空いていて  まだ数えていないなら、
                     // リバティーを１つ数え上げます。次からは重複して数えません。
-                    ++libertyOfPiece;
+                    ++count;
                     taikyoku.CountedBoard.Done_North(location);
                 }
                 else if
                 (
-                    taikyoku.Goban.LookColor_NorthOf(location) == color
+                    taikyoku.Goban.NorthOf(location) == color
                     &&
                     taikyoku.CountedBoard.CanDo_North(location)
                 )
                 {
                     // 北隣に 指定色の石が置いてあり、まだ数えていないなら、
                     // その石からさらにカウントを続けます。
-                    Util_CountLiberty.Count_Liberty_Recursive(ref libertyOfPiece, location.ToNorth(), color, taikyoku);
+                    Util_CountLiberty.Count_Recursive(ref count, location.ToNorth(), color, taikyoku);
                 }
                 // 指定した色でない石が置いてあれば何もしない。
             }
@@ -105,22 +105,22 @@ namespace Grayscale.GPL.P340____Liberty____.L250_Liberty
                 // もう、だいたい分かるだろう☆（＾▽＾）
                 if
                 (
-                    taikyoku.Goban.LookColor_SouthOf(location) == StoneColor.Empty
+                    taikyoku.Goban.SouthOf(location) == StoneColor.Empty
                     &&
                     taikyoku.CountedBoard.CanDo_South(location)
                 )
                 {
-                    ++libertyOfPiece;
+                    ++count;
                     taikyoku.CountedBoard.Done_South(location);
                 }
                 else if
                 (
-                    taikyoku.Goban.LookColor_SouthOf(location) == color
+                    taikyoku.Goban.SouthOf(location) == color
                     &&
                     taikyoku.CountedBoard.CanDo_South(location)
                 )
                 {
-                    Util_CountLiberty.Count_Liberty_Recursive(ref libertyOfPiece, location.ToSouth(), color, taikyoku);
+                    Util_CountLiberty.Count_Recursive(ref count, location.ToSouth(), color, taikyoku);
                 }
             }
             // 西隣を調べます。
@@ -128,22 +128,22 @@ namespace Grayscale.GPL.P340____Liberty____.L250_Liberty
             {
                 if
                 (
-                    taikyoku.Goban.LookColor_WestOf(location) == StoneColor.Empty
+                    taikyoku.Goban.WestOf(location) == StoneColor.Empty
                     &&
                     taikyoku.CountedBoard.CanDo_West(location)
                 )
                 {
-                    ++libertyOfPiece;
+                    ++count;
                     taikyoku.CountedBoard.Done_West(location);
                 }
                 else if
                 (
-                    taikyoku.Goban.LookColor_WestOf(location) == color
+                    taikyoku.Goban.WestOf(location) == color
                     &&
                     taikyoku.CountedBoard.CanDo_West(location)
                 )
                 {
-                    Util_CountLiberty.Count_Liberty_Recursive(ref libertyOfPiece, location.ToWest(), color, taikyoku);
+                    Util_CountLiberty.Count_Recursive(ref count, location.ToWest(), color, taikyoku);
                 }
             }
             // 東隣を調べます。
@@ -151,51 +151,51 @@ namespace Grayscale.GPL.P340____Liberty____.L250_Liberty
             {
                 if
                 (
-                    (taikyoku.Goban.LookColor_EastOf(location) == StoneColor.Empty)
+                    (taikyoku.Goban.EastOf(location) == StoneColor.Empty)
                     &&
                     taikyoku.CountedBoard.CanDo_East(location)
                 )
                 {
-                    ++libertyOfPiece;
+                    ++count;
                     taikyoku.CountedBoard.Done_East(location);
                 }
                 else if
                 (
-                    taikyoku.Goban.LookColor_EastOf(location) == color
+                    taikyoku.Goban.EastOf(location) == color
                     &&
                     taikyoku.CountedBoard.CanDo_East(location)
                 )
                 {
-                    Util_CountLiberty.Count_Liberty_Recursive(ref libertyOfPiece, location.ToEast(), color, taikyoku);
+                    Util_CountLiberty.Count_Recursive(ref count, location.ToEast(), color, taikyoku);
                 }
             }
         }
 
 
         /// <summary>
-        /// 碁盤の指定の交点 i,j にある石を起点に、つながっている同じ色の石（color piece）の総リバーティを数えます。
+        /// 碁盤の指定の交点 i,j にある石を起点に、つながっている同じ色の（１つ、または連の）石（color piece）の総リバーティを数えます。
         /// 
         /// Gnugo1.2 では、countlib関数です。
         /// </summary>
-        /// <param name="libertyOfPiece">Gnugo1.2 では、グローバル変数 lib でした。</param>
+        /// <param name="out_count">Gnugo1.2 では、グローバル変数 lib でした。</param>
         /// <param name="startLocation_inPiece">Gnugo1.2では、 行番号 m = 0～18、列番号 n = 0～18。</param>
         /// <param name="color">黒 or 白</param>
-        public static void Count_LibertyOfPiece
+        public static void Count
         (
-            out int libertyOfPiece,
+            out int out_count,
             GobanPoint startLocation_inPiece,
             StoneColor color,
             Taikyoku taikyoku
         )
         {
-            libertyOfPiece = 0;// Gnugo1.2 では、countlib関数の呼び出し元で グローバル変数を lib = 0 していました。
+            out_count = 0;// Gnugo1.2 では、countlib関数の呼び出し元で グローバル変数を lib = 0 していました。
 
 
             // 全てのピースを数えなおせるように、リセットします。
             taikyoku.CountedBoard.FillAll_WeCan(taikyoku.GobanBounds.BoardSize);
 
             // カレント・ピースのリバティーを数えます。
-            Util_CountLiberty.Count_Liberty_Recursive(ref libertyOfPiece, startLocation_inPiece, color, taikyoku);
+            Util_CountLiberty.Count_Recursive(ref out_count, startLocation_inPiece, color, taikyoku);
         }
     }
 }

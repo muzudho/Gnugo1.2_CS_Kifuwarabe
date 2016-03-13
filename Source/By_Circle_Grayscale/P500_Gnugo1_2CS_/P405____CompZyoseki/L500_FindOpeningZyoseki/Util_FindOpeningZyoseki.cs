@@ -102,7 +102,7 @@ namespace Grayscale.GPL.P405____CompZyoseki.L500_FindOpeningZyoseki
                 }
                 ((ComputerPlayerB)taikyoku.ComputerPlayer).NodeNo = cnd;
 
-                if (taikyoku.Goban.LookColor(out_location) == StoneColor.Empty)  // 置けるなら
+                if (taikyoku.Goban.At(out_location) == StoneColor.Empty)  // 置けるなら
                 {
                     out_score = Util_FindOpeningZyoseki.ZYOSEKI_SCORE;  // 定石の評価値
                     return true;
@@ -296,7 +296,7 @@ namespace Grayscale.GPL.P405____CompZyoseki.L500_FindOpeningZyoseki
                     GobanPoint mnLocation = new GobanPointImpl(m, n);
                     if
                     (
-                        taikyoku.Goban.LookColor(mnLocation) == taikyoku.MyColor // コンピューターの石
+                        taikyoku.Goban.At(mnLocation) == taikyoku.MyColor // コンピューターの石
                         &&
                         Util_FindLocalZyoseki.FindPattern(out tryLocation, out tryScore, mnLocation, taikyoku)
                         &&

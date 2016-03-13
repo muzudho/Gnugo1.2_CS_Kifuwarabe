@@ -82,7 +82,7 @@ namespace Grayscale.GPL.P490____EndOfGame__.L500_EndOfGame
                 {
                     GobanPoint location = new GobanPointImpl(i, j);
 
-                    if (taikyoku.Goban.LookColor(location) == color)//指定した色の石について
+                    if (taikyoku.Goban.At(location) == color)//指定した色の石について
                     {
                         int node = Util_AboutBoard.GetNodeByLocation(location, taikyoku.GobanBounds);//盤上の場所の通し番号
 
@@ -94,7 +94,7 @@ namespace Grayscale.GPL.P490____EndOfGame__.L500_EndOfGame
                         // 北隣を調べる
                         if (!location.IsNorthEnd())//北端ではないなら。
                         {
-                            if (taikyoku.Goban.LookColor_NorthOf(location) == color)
+                            if (taikyoku.Goban.NorthOf(location) == color)
                             {
                                 neswNodes.Add(Util_AboutBoard.GetNodeByLocation(location.ToNorth(), taikyoku.GobanBounds));//北隣の場所を追加。
                             }
@@ -102,7 +102,7 @@ namespace Grayscale.GPL.P490____EndOfGame__.L500_EndOfGame
                         // 東隣を調べる
                         if (!location.IsEastEnd(taikyoku.GobanBounds))//東端ではないなら。
                         {
-                            if (taikyoku.Goban.LookColor_EastOf(location) == color)
+                            if (taikyoku.Goban.EastOf(location) == color)
                             {
                                 neswNodes.Add(Util_AboutBoard.GetNodeByLocation(location.ToEast(), taikyoku.GobanBounds));
                             }
@@ -110,7 +110,7 @@ namespace Grayscale.GPL.P490____EndOfGame__.L500_EndOfGame
                         // 南隣を調べる
                         if (!location.IsSouthEnd(taikyoku.GobanBounds))//南端ではないなら
                         {
-                            if (taikyoku.Goban.LookColor_SouthOf(location) == color)
+                            if (taikyoku.Goban.SouthOf(location) == color)
                             {
                                 neswNodes.Add(Util_AboutBoard.GetNodeByLocation(location.ToSouth(), taikyoku.GobanBounds));
                             }
@@ -118,7 +118,7 @@ namespace Grayscale.GPL.P490____EndOfGame__.L500_EndOfGame
                         // 西隣を調べる
                         if (!location.IsWestEnd())//西端ではないなら。
                         {
-                            if (taikyoku.Goban.LookColor_WestOf(location) == color)
+                            if (taikyoku.Goban.WestOf(location) == color)
                             {
                                 neswNodes.Add(Util_AboutBoard.GetNodeByLocation(location.ToWest(), taikyoku.GobanBounds));
                             }
@@ -277,7 +277,7 @@ namespace Grayscale.GPL.P490____EndOfGame__.L500_EndOfGame
                 }
                 else
                 {
-                    if (taikyoku.Goban.LookColor(location) == taikyoku.MyColor)
+                    if (taikyoku.Goban.At(location) == taikyoku.MyColor)
                     {
 #if DEBUG
                         Console.WriteLine("Just before bfslist.");
@@ -295,7 +295,7 @@ namespace Grayscale.GPL.P490____EndOfGame__.L500_EndOfGame
                             taikyoku.Count_MyCaptured++;
                         }
                     }
-                    else if (taikyoku.Goban.LookColor(location) == taikyoku.YourColor)
+                    else if (taikyoku.Goban.At(location) == taikyoku.YourColor)
                     {
 #if DEBUG
                         Console.WriteLine("Just before second bfslist.");
@@ -447,7 +447,7 @@ namespace Grayscale.GPL.P490____EndOfGame__.L500_EndOfGame
                 for (int j = 0; j < taikyoku.GobanBounds.BoardSize; j++)
                 {
                     GobanPoint ijLocation = new GobanPointImpl(i, j);
-                    if (taikyoku.Goban.LookColor(ijLocation) == StoneColor.Empty)
+                    if (taikyoku.Goban.At(ijLocation) == StoneColor.Empty)
                     {
                         taikyoku.Goban.Put(ijLocation, Util_SeitiZi.Test_SeitiZi(ijLocation, taikyoku));
                     }
@@ -473,11 +473,11 @@ namespace Grayscale.GPL.P490____EndOfGame__.L500_EndOfGame
                 for (int j = 0; j < taikyoku.GobanBounds.BoardSize; j++)
                 {
                     GobanPoint ijLocation = new GobanPointImpl(i, j);
-                    if (taikyoku.Goban.LookColor(ijLocation) == taikyoku.MyColor)
+                    if (taikyoku.Goban.At(ijLocation) == taikyoku.MyColor)
                     {
                         ++out_myTotal;
                     }
-                    else if (taikyoku.Goban.LookColor(ijLocation) == taikyoku.YourColor)
+                    else if (taikyoku.Goban.At(ijLocation) == taikyoku.YourColor)
                     {
                         ++out_yourTotal;
                     }
