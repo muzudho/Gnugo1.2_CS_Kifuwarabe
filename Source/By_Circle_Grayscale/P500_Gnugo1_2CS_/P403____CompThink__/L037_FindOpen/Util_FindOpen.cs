@@ -53,16 +53,16 @@ namespace Grayscale.GPL.P403____CompThink__.L037_FindOpen
         /// 
         /// Gnugo1.2 では findopen関数。
         /// </summary>
-        /// <param name="tryLocations">(mutable)石を置ける位置の配列。Gnugo1.2 では、i配列、j配列。</param>
-        /// <param name="location">Gnugo1.2では、 カレント 行番号 m = 0～18、列番号 n = 0～18。</param>
+        /// <param name="try3Locations">(mutable)隣接する東西南北の最大3方向がこの配列に入るはず。Gnugo1.2 では、i配列、j配列。</param>
+        /// <param name="curLocation">Gnugo1.2では、 カレント 行番号 m = 0～18、列番号 n = 0～18。</param>
         /// <param name="color">黒 or 白</param>
         /// <param name="liberty123OfPiece">Gnugo1.2 では minlib 引数。3以下のリバティー</param>
         /// <param name="taikyoku"></param>
         /// <returns></returns>
-        public static bool FindOpenLocations
+        public static bool FindOpen3Locations
         (
-            List<GobanPoint> tryLocations,
-            GobanPoint location,
+            List<GobanPoint> try3Locations,
+            GobanPoint curLocation,
             StoneColor color,
             int liberty123OfPiece,
             Taikyoku taikyoku
@@ -72,23 +72,23 @@ namespace Grayscale.GPL.P403____CompThink__.L037_FindOpen
             Board ban = taikyoku.Goban; // 碁盤
 
             // この位置はもう調べた、というフラグを立てます。
-            taikyoku.MarkingBoard.Done_Current(location);
+            taikyoku.MarkingBoard.Done_Current(curLocation);
 
             // 北ネイバー
-            if (!location.IsNorthEnd())//北端でなければ
+            if (!curLocation.IsNorthEnd())//北端でなければ
             {
                 if
                 (
                     // 北隣が空っぽで。
-                    ban.NorthOf(location) == StoneColor.Empty
+                    ban.NorthOf(curLocation) == StoneColor.Empty
                     &&
                     // 北隣が、石を取った場所（コウになるかもしれない）でなければ。
-                    !taikyoku.MyKo.Is_NorthOf(location)
+                    !taikyoku.MyKo.Is_NorthOf(curLocation)
                 )
                 {
-                    // 北隣を、試す指し手として追加。
-                    tryLocations.Add( location.ToNorth());
-                    if (tryLocations.Count == liberty123OfPiece)
+                    // 北隣を候補として追加。
+                    try3Locations.Add( curLocation.ToNorth());
+                    if (try3Locations.Count == liberty123OfPiece)
                     {
                         // リバティーの数分追加したなら正常終了。
                         result = true;
@@ -98,16 +98,16 @@ namespace Grayscale.GPL.P403____CompThink__.L037_FindOpen
                 else if
                 (
                     // 指定したポイントの北隣が指定の色で。
-                    ban.NorthOf(location) == color
+                    ban.NorthOf(curLocation) == color
                     &&
-                    taikyoku.MarkingBoard.CanDo_North(location) // 北側をまだ調べていないなら
+                    taikyoku.MarkingBoard.CanDo_North(curLocation) // 北側をまだ調べていないなら
                 )
                 {
                     if
                     (
-                        Util_FindOpen.FindOpenLocations(tryLocations, location.ToNorth(), color, liberty123OfPiece, taikyoku)
+                        Util_FindOpen.FindOpen3Locations(try3Locations, curLocation.ToNorth(), color, liberty123OfPiece, taikyoku)
                         &&
-                        tryLocations.Count == liberty123OfPiece
+                        try3Locations.Count == liberty123OfPiece
                     )
                     {
                         result = true;
@@ -117,18 +117,18 @@ namespace Grayscale.GPL.P403____CompThink__.L037_FindOpen
             }
 
             // 南ネイバーを調べます。
-            if (!location.IsSouthEnd(taikyoku.GobanBounds))
+            if (!curLocation.IsSouthEnd(taikyoku.GobanBounds))
             {
                 if
                 (
-                    ban.SouthOf(location) == StoneColor.Empty
+                    ban.SouthOf(curLocation) == StoneColor.Empty
                     &&
                     // 南隣が、取った石（コウかもしれない）でなければ。
-                    !taikyoku.MyKo.Is_SouthOf(location)
+                    !taikyoku.MyKo.Is_SouthOf(curLocation)
                 )
                 {
-                    tryLocations.Add( location.ToSouth());
-                    if (tryLocations.Count == liberty123OfPiece)
+                    try3Locations.Add( curLocation.ToSouth());
+                    if (try3Locations.Count == liberty123OfPiece)
                     {
                         result = true;
                         goto gt_EndMethod;
@@ -138,16 +138,16 @@ namespace Grayscale.GPL.P403____CompThink__.L037_FindOpen
                 {
                     if
                     (
-                        ban.SouthOf(location) == color
+                        ban.SouthOf(curLocation) == color
                         &&
-                        taikyoku.MarkingBoard.CanDo_South(location)
+                        taikyoku.MarkingBoard.CanDo_South(curLocation)
                     )
                     {
                         if
                         (
-                            Util_FindOpen.FindOpenLocations(tryLocations, location.ToSouth(), color, liberty123OfPiece, taikyoku)
+                            Util_FindOpen.FindOpen3Locations(try3Locations, curLocation.ToSouth(), color, liberty123OfPiece, taikyoku)
                             &&
-                            tryLocations.Count == liberty123OfPiece
+                            try3Locations.Count == liberty123OfPiece
                         )
                         {
                             result = true;
@@ -158,18 +158,18 @@ namespace Grayscale.GPL.P403____CompThink__.L037_FindOpen
             }
 
             // 西ネイバーを調べます。
-            if (location.J != 0)
+            if (curLocation.J != 0)
             {
                 if
                 (
-                    ban.WestOf(location) == StoneColor.Empty
+                    ban.WestOf(curLocation) == StoneColor.Empty
                     &&
                     // 西隣が、取った石（コウかもしれない）でなければ。
-                    taikyoku.MyKo.Is_WestOf(location)
+                    taikyoku.MyKo.Is_WestOf(curLocation)
                 )
                 {
-                    tryLocations.Add( location.ToWest());
-                    if (tryLocations.Count == liberty123OfPiece)
+                    try3Locations.Add( curLocation.ToWest());
+                    if (try3Locations.Count == liberty123OfPiece)
                     {
                         result = true;
                         goto gt_EndMethod;
@@ -177,16 +177,16 @@ namespace Grayscale.GPL.P403____CompThink__.L037_FindOpen
                 }
                 else if
                 (
-                    ban.WestOf(location) == color
+                    ban.WestOf(curLocation) == color
                     &&
-                    taikyoku.MarkingBoard.CanDo_West(location)
+                    taikyoku.MarkingBoard.CanDo_West(curLocation)
                 )
                 {
                     if
                     (
-                        Util_FindOpen.FindOpenLocations(tryLocations, location.ToWest(), color, liberty123OfPiece, taikyoku)
+                        Util_FindOpen.FindOpen3Locations(try3Locations, curLocation.ToWest(), color, liberty123OfPiece, taikyoku)
                         &&
-                        tryLocations.Count == liberty123OfPiece
+                        try3Locations.Count == liberty123OfPiece
                     )
                     {
                         result = true;
@@ -196,18 +196,18 @@ namespace Grayscale.GPL.P403____CompThink__.L037_FindOpen
             }
 
             // 東ネイバーを調べます。
-            if (!location.IsEastEnd(taikyoku.GobanBounds))
+            if (!curLocation.IsEastEnd(taikyoku.GobanBounds))
             {
                 if
                 (
-                    ban.EastOf(location) == StoneColor.Empty
+                    ban.EastOf(curLocation) == StoneColor.Empty
                     &&
                     // 東隣が、取った石（コウかもしれない）でなければ。
-                    taikyoku.MyKo.Is_EastOf(location)
+                    taikyoku.MyKo.Is_EastOf(curLocation)
                 )
                 {
-                    tryLocations.Add( location.ToEast());
-                    if (tryLocations.Count == liberty123OfPiece)
+                    try3Locations.Add( curLocation.ToEast());
+                    if (try3Locations.Count == liberty123OfPiece)
                     {
                         result = true;
                         goto gt_EndMethod;
@@ -215,16 +215,16 @@ namespace Grayscale.GPL.P403____CompThink__.L037_FindOpen
                 }
                 else if
                 (
-                    ban.EastOf(location) == color
+                    ban.EastOf(curLocation) == color
                     &&
-                    taikyoku.MarkingBoard.CanDo_East(location)
+                    taikyoku.MarkingBoard.CanDo_East(curLocation)
                 )
                 {
                     if
                     (
-                        Util_FindOpen.FindOpenLocations(tryLocations, location.ToEast(), color, liberty123OfPiece, taikyoku)
+                        Util_FindOpen.FindOpen3Locations(try3Locations, curLocation.ToEast(), color, liberty123OfPiece, taikyoku)
                         &&
-                        tryLocations.Count == liberty123OfPiece
+                        try3Locations.Count == liberty123OfPiece
                     )
                     {
                         result = true;

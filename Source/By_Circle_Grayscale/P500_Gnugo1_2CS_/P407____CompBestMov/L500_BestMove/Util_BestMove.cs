@@ -83,13 +83,13 @@ namespace Grayscale.GPL.P407____CompBestMov.L500_BestMove
             // 
             // Gnugo1.2 では、l という名前のグローバル変数。liberty の略だろうか？
             // eval で内容が設定され、その内容は exambord、findsavr、findwinr、suicideで使用されます。
-            int[,] liberty_forAllPoints;
+            int[,] libertyOfNodes;
 
-            // 相手（人間）のそれぞれのピースのリバティーを再び数えます。
-            Util_CountLibertyAll.Count_Liberty_ForAllPoint(out liberty_forAllPoints, taikyoku.YourColor, taikyoku);
+            // 相手（人間）の呼吸点の数　を再び数えます。
+            Util_LibertyAtNode.CountAll(out libertyOfNodes, taikyoku.YourColor, taikyoku);
 
             // 相手のピースを取ったり、攻めたりする手を探します。
-            if (Util_FindWinner.FindSasite(out tryLocation, out tryScore, liberty_forAllPoints, taikyoku))
+            if (Util_FindWinner.FindBestLocation(out tryLocation, out tryScore, libertyOfNodes, taikyoku))
             {
                 if (bestScore < tryScore) // 新しい最善手を見つけたなら
                 {
@@ -99,7 +99,7 @@ namespace Grayscale.GPL.P407____CompBestMov.L500_BestMove
             }
 
             // もし脅かされていれば、幾つかのピースを守ります。
-            if (Util_SasiteSaver.FindLocation_LibertyWeak(out tryLocation, out tryScore, liberty_forAllPoints, taikyoku))
+            if (Util_SasiteSaver.FindLocation_LibertyWeak(out tryLocation, out tryScore, libertyOfNodes, taikyoku))
             {
                 if (bestScore < tryScore) // 新しい最善手を見つけたなら
                 {

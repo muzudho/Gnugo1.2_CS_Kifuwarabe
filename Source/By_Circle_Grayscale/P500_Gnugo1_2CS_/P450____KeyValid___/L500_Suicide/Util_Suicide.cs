@@ -58,10 +58,12 @@ namespace Grayscale.GPL.P450____KeyValid___.L500_Suicide
             Taikyoku taikyoku
             )
         {
+            int banSize = taikyoku.GobanBounds.BoardSize;
+
             // 新しい動きのリバティーを数えなおします。
-            int libertyOfPiece; // Gnugo1.2 では、グローバル変数 lib = 0 でした。
-            Util_CountLiberty.Count(out libertyOfPiece, location, taikyoku.YourColor, taikyoku);
-            if (libertyOfPiece == 0)
+            int liberty; // Gnugo1.2 では、グローバル変数 lib = 0 でした。
+            Util_CountLiberty.Count(out liberty, location, taikyoku.YourColor, taikyoku);
+            if (liberty == 0)
             // 調べて、もしコンピューターのピースズを殺して、コの可能性があれば、
             // 新しい動きは自殺手です。
             {
@@ -72,22 +74,22 @@ namespace Grayscale.GPL.P450____KeyValid___.L500_Suicide
                 // 
                 // Gnugo1.2 では、l という名前のグローバル変数。liberty の略だろうか？
                 // eval で内容が設定され、その内容は exambord、findsavr、findwinr、suicideで使用されます。
-                int[,] liberty_forAllPoints;
+                int[,] libertyOfNodes;
 
-                // コンピューターのそれぞれのピースのリバティーを数えます。
-                Util_CountLibertyAll.Count_Liberty_ForAllPoint(out liberty_forAllPoints, taikyoku.MyColor, taikyoku);
+                // コンピューターの呼吸点の数を数えます。
+                Util_LibertyAtNode.CountAll(out libertyOfNodes, taikyoku.MyColor, taikyoku);
                 int k = 0;
 
-                for (int m = 0; m < taikyoku.GobanBounds.BoardSize; m++)
+                for (int m = 0; m < banSize; m++)
                 {
-                    for (int n = 0; n < taikyoku.GobanBounds.BoardSize; n++)
+                    for (int n = 0; n < banSize; n++)
                     {
                         // 殺されるかもしれないピースズを数えます。
                         if
                         (
                             (taikyoku.Goban.At(new GobanPointImpl(m, n)) == taikyoku.MyColor)
                             &&
-                            liberty_forAllPoints[m,n] == 0
+                            libertyOfNodes[m,n] == 0
                         )
                         {
                             ++k;

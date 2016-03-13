@@ -61,12 +61,9 @@ namespace Grayscale.GPL.P350____RemoveStone.L500_RemoveStones
             Taikyoku taikyoku
         )
         {
-            // 盤上の全てのポイントに、次の数字を記憶させます。
-            //
-            // その地点が、四方でつながっている石のかたまり（piece）のとき、
-            // そのピース全体でのリバティーを数え、ポイントの１つ１つにその数字を覚えさせます。
-            int[,] liberty_forAllPoints;           
-            Util_CountLibertyAll.Count_Liberty_ForAllPoint(out liberty_forAllPoints, colorKo, taikyoku);
+            // 盤上の全てのポイントに、呼吸点の数を記憶させます。
+            int[,] libertyOfNodes;           
+            Util_LibertyAtNode.CountAll(out libertyOfNodes, colorKo, taikyoku);
 
             // 取った石の位置を初期化します。（コウで戻さなくてはならない石の位置を覚えていたもの）
             if (colorKo == taikyoku.MyColor)
@@ -96,7 +93,7 @@ namespace Grayscale.GPL.P350____RemoveStone.L500_RemoveStones
                         taikyoku.Goban.At(location) == colorKo
                         &&
                         // ピースのリバティーが記録されていないなら
-                        liberty_forAllPoints[i,j] == 0
+                        libertyOfNodes[i,j] == 0
                     )
                     {
                         // 石を除外します。

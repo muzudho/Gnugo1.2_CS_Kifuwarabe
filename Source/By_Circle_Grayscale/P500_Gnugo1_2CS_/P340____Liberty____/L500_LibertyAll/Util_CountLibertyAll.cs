@@ -41,41 +41,46 @@ using Grayscale.GPL.P340____Liberty____.L250_Liberty;
 
 namespace Grayscale.GPL.P340____Liberty____.L500_LibertyAll
 {
-    public abstract class Util_CountLibertyAll
+    /// <summary>
+    /// 交点ごとに石（または連）の総呼吸点の数を求めます。
+    /// これを盤上の全交点の数全てに対して行います。
+    /// 
+    /// 石の色を指定して行います。
+    /// </summary>
+    public abstract class Util_LibertyAtNode
     {
         /// <summary>
-        /// 盤上の全交点に、その場所の石（または連）の呼吸点の数を埋めます。
-        /// 連の場合、最初の１つの交点にこの数字は記録されます。
+        /// 盤上の全交点に、その場所の石（または連）の総呼吸点の数を埋めます。
         ///
         /// Gnugo1.2 では、eval 関数。
         /// </summary>
-        /// <param name="liberty_eachPoint">
+        /// <param name="libertyOfNodes">
         /// Gnugo1.2 では、l という名前のグローバル変数。liberty の略だろうか？
         /// eval で内容が設定され、その内容は exambord、findsavr、findwinr、suicideで使用されます。
         /// </param>
         /// <param name="color">黒 or 白</param>
-        public static void Count_Liberty_ForAllPoint
+        public static void CountAll
         (
-            out int[,] liberty_eachPoint,
+            out int[,] libertyOfNodes,
             StoneColor color,
             Taikyoku taikyoku
         )
         {
             int banSize = taikyoku.GobanBounds.BoardSize; // 何路盤
 
-            liberty_eachPoint = new int[taikyoku.GobanBounds.BoardSize, taikyoku.GobanBounds.BoardSize];
+            libertyOfNodes = new int[taikyoku.GobanBounds.BoardSize, taikyoku.GobanBounds.BoardSize];
 
-            // それぞれのピースのリバティーを数えます。
+            // それぞれのピースの総呼吸点の数を数えます。
             for (int i = 0; i < banSize; i++)
             {
                 for (int j = 0; j < banSize; j++)
                 {
                     GobanPoint iLocation = new GobanPointImpl(i, j);
-                    if (taikyoku.Goban.At(iLocation) == color)// 指定の色のみ
+                    if (taikyoku.Goban.At(iLocation) == color)// 指定の色の石のみ
                     {
                         int liberty; // Gnugo1.2 では、グローバル変数 lib = 0 でした。
                         Util_CountLiberty.Count(out liberty, iLocation, color, taikyoku);
-                        liberty_eachPoint[i, j] = liberty;
+                        libertyOfNodes[i, j] = liberty;
                     }
                 }
             }
