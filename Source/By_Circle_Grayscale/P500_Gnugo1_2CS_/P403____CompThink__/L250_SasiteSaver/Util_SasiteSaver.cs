@@ -55,7 +55,7 @@ namespace Grayscale.GPL.P403____CompThink__.L250_SasiteSaver
         /// </summary>
         /// <param name="out_bestLocation">次の指し手の   行、列番号</param>
         /// <param name="out_maxScore">Gnugo1.2 では、val 引数。次の指し手の評価値</param>
-        /// <param name="liberty_eachPoint">
+        /// <param name="libertyOfNodes">
         /// カレント色の（１つ、または連の）石のリバティー（四方の石を置けるところ）
         /// 
         /// Gnugo1.2 では、l という名前のグローバル変数。liberty の略だろうか？
@@ -67,7 +67,7 @@ namespace Grayscale.GPL.P403____CompThink__.L250_SasiteSaver
         (
             out GobanPoint out_bestLocation,
             out int out_maxScore,
-            int[,] liberty_eachPoint,
+            int[,] libertyOfNodes,
             Taikyoku taikyoku
         )
         {
@@ -94,25 +94,25 @@ namespace Grayscale.GPL.P403____CompThink__.L250_SasiteSaver
 
                         if
                         (
-                            ban.At(iLocation) == taikyoku.MyColor // コンピューターの色
+                            ban.At(iLocation) == taikyoku.MyColor // 脅かされているかもしれない自分（コンピューター）の色
                             &&
-                            liberty_eachPoint[m,n] == iExpectedLiberty // 指定したリバティーの数
+                            libertyOfNodes[m,n] == iExpectedLiberty // 呼吸点の数が少ないかもしれない
                         )
                         {
-                            GobanPoint tryLocation; // Gnugo1.2 では、ti,tj (try i,j)という変数名。
-                            int tryScore;    // Gnugo1.2 では、tval 変数。評価値
+                            GobanPoint bestLocation; // Gnugo1.2 では、ti,tj (try i,j)という変数名。
+                            int bestScore;    // Gnugo1.2 では、tval 変数。評価値
 
                             // セーブ・ピースズへの動きを探します。
                             taikyoku.MarkingBoard.Initmark(taikyoku.GobanBounds.BoardSize);
                             if
                             (
-                                Util_SasiteNext.FindStone_LibertyWeak(out tryLocation, out tryScore, iLocation, iExpectedLiberty, taikyoku)
+                                Util_SasiteNext.FindStone_LibertyWeak(out bestLocation, out bestScore, iLocation, iExpectedLiberty, taikyoku)
                                 &&
-                                (out_maxScore < tryScore)   // 評価値が高い（リバティーが少なくて危険）ならば
+                                (out_maxScore < bestScore)   // 評価値が高い（リバティーが少なくて危険）ならば
                             )
                             {
-                                out_maxScore = tryScore;    // 評価値
-                                out_bestLocation.SetLocation(tryLocation);// 位置i,j
+                                out_maxScore = bestScore;    // 評価値
+                                out_bestLocation.SetLocation(bestLocation);// 位置i,j
                             }
                         }
                     }

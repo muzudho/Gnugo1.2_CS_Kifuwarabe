@@ -99,6 +99,7 @@ namespace Grayscale.GPL.P340____Liberty____.L250_Liberty
                 }
                 // 指定した色でない石が置いてあれば何もしない。
             }
+
             // 南隣を調べます。
             if (!location.IsSouthEnd(taikyoku.GobanBounds))//南端でなければ
             {
@@ -123,6 +124,7 @@ namespace Grayscale.GPL.P340____Liberty____.L250_Liberty
                     Util_CountLiberty.Count_Recursive(ref count, location.ToSouth(), color, taikyoku);
                 }
             }
+
             // 西隣を調べます。
             if (!location.IsWestEnd())//西端でなければ
             {
@@ -146,6 +148,7 @@ namespace Grayscale.GPL.P340____Liberty____.L250_Liberty
                     Util_CountLiberty.Count_Recursive(ref count, location.ToWest(), color, taikyoku);
                 }
             }
+
             // 東隣を調べます。
             if (!location.IsEastEnd(taikyoku.GobanBounds))//東端でなければ
             {

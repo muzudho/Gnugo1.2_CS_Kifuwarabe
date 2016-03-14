@@ -56,30 +56,32 @@ namespace Grayscale.GPL.P403____CompThink__.L125_SasiteNext
         /// 
         /// Gnugo1.2 では fval 関数。
         /// </summary>
-        /// <param name="newLiberty"></param>
-        /// <param name="expectedLiberty"></param>
+        /// <param name="futureLiberty">Gnugo1.2 では newlib 引数。ツケた後の呼吸点の数。</param>
+        /// <param name="currentLiberty">Gnugo1.2 では minlib 引数。ツケる前の呼吸点の数。</param>
         /// <returns></returns>
         private static int Evaluate_LibertyWeak
         (
-            int newLiberty, // Gnugo1.2 では newlib 引数。新しいリバティー
-            int expectedLiberty  // Gnugo1.2 では minlib 引数。リバティーの少ない方から回しているループカウンター。
+            int futureLiberty,
+            int currentLiberty
         )
         {
             int result_score; // Gnugo1.2 では val 変数。評価値
 
-            if (newLiberty <= expectedLiberty)
+            if (futureLiberty <= currentLiberty)
             {
-                result_score = -1;   // 評価値は -1
+                // ツケて　呼吸点が減っているようでは話しになりません。
+                result_score = -1;
             }
             else
             {
-                int upLiberty = newLiberty - expectedLiberty;    // 増えたリバティー
+                // ツケて　呼吸点が増えているので、どれだけ増えたかを数えます。
+                int upLiberty = futureLiberty - currentLiberty;
 
                 result_score = 40  // 40を基本に。
                         +
-                        (upLiberty - 1) * 50    // リバティーが 2 以上増えるなら、1 増えるたリバティーに 50 点のボーナス。
+                        (upLiberty - 1) * 50    // 呼吸点が２以上増えるなら、呼吸点が１増えるたびに 50 点のボーナス。
                         /
-                        (expectedLiberty * expectedLiberty * expectedLiberty)  // 指定したリバティーが大きいほどスコアが減る仕掛け。
+                        (currentLiberty * currentLiberty * currentLiberty)  // ツケる前の呼吸点の数が大きいほど、スコアが減る（緊急の関心を薄れさせる）仕掛け。
                                                                 // 1 : 1 点
                                                                 // 2 : 8 点
                                                                 // 3 : 27 点
@@ -91,6 +93,9 @@ namespace Grayscale.GPL.P403____CompThink__.L125_SasiteNext
         }
 
         /// <summary>
+        /// 弱っている石を助ける手を探します。
+        /// 助けるというのは、（襲われそうな）自分の石の　横にツケることです。
+        /// 
         /// 位置m,nを含むグループから、
         /// 上下左右に隣接する石（または連）の呼吸点を調べ、
         /// 最もスコアの高い石（または連）の場所 i,j と、評価値を探します。（連の場合、どこか１つの石の場所）
@@ -99,185 +104,211 @@ namespace Grayscale.GPL.P403____CompThink__.L125_SasiteNext
         /// </summary>
         /// <param name="out_bestLocation">次の動きの   行、列番号</param>
         /// <param name="out_bestScore">Gnugo1.2では val という名前のポインター変数。次の指し手の評価値</param>
-        /// <param name="curStone_location">カレント・ストーンの 行番号 m、列番号 n</param>
-        /// <param name="expectedLiberty">カレント・ストーンのリバティー。Gnugo1.2 では minlib 変数。</param>
+        /// <param name="myStone_location">（脅かされているかもしれない）コンピューターの石の 行番号 m、列番号 n</param>
+        /// <param name="currentLiberty">現在のリバティーの数。1～3を、脅かされていると考えます。Gnugo1.2 では minlib 変数。</param>
         /// <param name="taikyoku"></param>
         /// <returns></returns>
         public static bool FindStone_LibertyWeak
         (
-            out GobanPoint out_bestLocation,
-            out int out_bestScore,
-            GobanPoint curStone_location,
-            int expectedLiberty,
-            Taikyoku taikyoku
+            out GobanPoint  out_bestLocation,
+            out int         out_bestScore,
+            GobanPoint      myStone_location,
+            int             currentLiberty,
+            Taikyoku        taikyoku
         )
         {
-            GobanPoint tryLocation; // Gnugo1.2 では ti,tj という変数名。
-            tryLocation = new GobanPointImpl(0, 0);// 2015-11-26 追加
-            int tryScore = 0;    // Gnugo1.2 では tval 変数。 隣位置の評価値。    // 2015-11-26 追加 0 で初期化。
-            bool found = false;
 
             out_bestLocation = new GobanPointImpl(-1,-1);
             out_bestScore = -1;
 
             // カレント位置をマークします。
-            taikyoku.MarkingBoard.Done_Current(curStone_location);
+            taikyoku.MarkingBoard.Done_Current(myStone_location);
+
+            //
+            // 東西南北のどこかに　空きスペース　（がないと助けられません）があるはずです。
+            //
 
             //--------------------------------------------------------------------------
-            // 北ネイバーを調べます。
-            if (!curStone_location.IsNorthEnd()) // 北端でなければ。
+            // 北隣を調べます。
             {
-                if (taikyoku.Goban.NorthOf(curStone_location) == StoneColor.Empty)
+                GobanPoint tryLocation = new GobanPointImpl(0, 0); // Gnugo1.2 では ti,tj という変数名。// 初期値は 2015-11-26 追加
+                int tryScore = 0;    // Gnugo1.2 では tval 変数。 隣位置の評価値。    // 2015-11-26 追加 0 で初期化。
+                bool found = false;
+
+                if (!myStone_location.IsNorthEnd()) // 北端でない石のみ。
                 {
-                    // 北隣の位置i,jをセット
-                    tryLocation.SetLocation(curStone_location.ToNorth());
-            
-                    // 隣の石（または連）のリバティーを数えます。
-                    int newLiberty; // Gnugo1.2 では、グローバル変数 lib = 0 でした。
-                    Util_CountLiberty.Count(out newLiberty, tryLocation, taikyoku.MyColor, taikyoku);
-                    tryScore = Util_SasiteNext.Evaluate_LibertyWeak(newLiberty, expectedLiberty);   // 評価値計算
-            
-                    found = true;
-                }
-                else if
-                (
-                    taikyoku.Goban.NorthOf(curStone_location) == taikyoku.MyColor // 北隣がコンピューターの石で、
-                    &&
-                    taikyoku.MarkingBoard.CanDo_North(curStone_location) // 北隣のマーキングが 0 なら
-                )
-                {
-                    if (Util_SasiteNext.FindStone_LibertyWeak(out tryLocation, out tryScore, curStone_location.ToNorth(), expectedLiberty, taikyoku))    // 再帰的に検索
+                    if (taikyoku.Goban.NorthOf(myStone_location) == StoneColor.Empty)
                     {
+                        // わたしの石の北隣にある空きスペースの位置。
+                        tryLocation.SetLocation(myStone_location.ToNorth());
+
+                        // 空きスペースに石を置いたと考えて、石を置いた局面のその自分の石（または連）の呼吸点を数えます。
+                        int futureLiberty; // Gnugo1.2 では、グローバル変数 lib = 0 でした。
+                        Util_CountLiberty.Count(out futureLiberty, tryLocation, taikyoku.MyColor, taikyoku);
+
+                        // 評価値計算
+                        tryScore = Util_SasiteNext.Evaluate_LibertyWeak(futureLiberty, currentLiberty);
+
                         found = true;
                     }
+                    else if
+                    (
+                        taikyoku.Goban.NorthOf(myStone_location) == taikyoku.MyColor // 北隣がコンピューターの石で、
+                        &&
+                        taikyoku.MarkingBoard.CanDo_North(myStone_location) // 北隣のマーキングが 0 なら
+                    )
+                    {
+                        if (Util_SasiteNext.FindStone_LibertyWeak(out tryLocation, out tryScore, myStone_location.ToNorth(), currentLiberty, taikyoku))    // 再帰的に検索
+                        {
+                            found = true;
+                        }
+                    }
                 }
-            }
 
-            if (found)  // 見つかったら1
-            {
-                found = false;
-                if (out_bestScore < tryScore && !Util_OwnEye.IsThis(tryLocation, taikyoku))
+                if (found)  // 見つかったら1
                 {
-                    out_bestScore = tryScore;    // 高い方の評価値を残している？
-                    out_bestLocation.SetLocation(tryLocation);// 高い方の交点i,jを残している？
+                    found = false;
+                    if (out_bestScore < tryScore && !Util_OwnEye.IsThis(tryLocation, taikyoku))
+                    {
+                        out_bestScore = tryScore;    // 高い方の評価値を残している？
+                        out_bestLocation.SetLocation(tryLocation);// 高い方の交点i,jを残している？
+                    }
                 }
             }
 
             //--------------------------------------------------------------------------
             // 南ネイバーを調べます。
-            if (!curStone_location.IsSouthEnd(taikyoku.GobanBounds))    // 南端でなければ。
             {
-                if (taikyoku.Goban.SouthOf(curStone_location) == StoneColor.Empty)
-                {
-                    // 南隣の石（または連）の呼吸点の数を調べ、
-                    // 期待する呼吸点の数より　大きいほど高い評価値を付けます。
-                    tryLocation.SetLocation(curStone_location.ToSouth());
+                GobanPoint tryLocation = new GobanPointImpl(0, 0); // Gnugo1.2 では ti,tj という変数名。// 初期値は 2015-11-26 追加
+                int tryScore = 0;    // Gnugo1.2 では tval 変数。 隣位置の評価値。    // 2015-11-26 追加 0 で初期化。
+                bool found = false;
 
-                    int adjLiberty; // Gnugo1.2 では、グローバル変数 lib = 0 でした。
-                    Util_CountLiberty.Count(out adjLiberty, tryLocation, taikyoku.MyColor, taikyoku);
-                    tryScore = Util_SasiteNext.Evaluate_LibertyWeak(adjLiberty, expectedLiberty);
-                    found = true;
-                }
-                else if
-                (
-                    taikyoku.Goban.SouthOf(curStone_location) == taikyoku.MyColor
-                    &&
-                    taikyoku.MarkingBoard.CanDo_South(curStone_location) // 南側
-                )
+                if (!myStone_location.IsSouthEnd(taikyoku.GobanBounds))    // 南端でなければ。
                 {
-                    if (Util_SasiteNext.FindStone_LibertyWeak(out tryLocation, out tryScore, curStone_location.ToSouth(), expectedLiberty, taikyoku))
+                    if (taikyoku.Goban.SouthOf(myStone_location) == StoneColor.Empty)
                     {
+                        // 南隣の石（または連）の呼吸点の数を調べ、
+                        // 期待する呼吸点の数より　大きいほど高い評価値を付けます。
+                        tryLocation.SetLocation(myStone_location.ToSouth());
+
+                        int futureLiberty; // Gnugo1.2 では、グローバル変数 lib = 0 でした。
+                        Util_CountLiberty.Count(out futureLiberty, tryLocation, taikyoku.MyColor, taikyoku);
+                        tryScore = Util_SasiteNext.Evaluate_LibertyWeak(futureLiberty, currentLiberty);
                         found = true;
                     }
+                    else if
+                    (
+                        taikyoku.Goban.SouthOf(myStone_location) == taikyoku.MyColor
+                        &&
+                        taikyoku.MarkingBoard.CanDo_South(myStone_location) // 南側
+                    )
+                    {
+                        if (Util_SasiteNext.FindStone_LibertyWeak(out tryLocation, out tryScore, myStone_location.ToSouth(), currentLiberty, taikyoku))
+                        {
+                            found = true;
+                        }
+                    }
                 }
-            }
 
-            if (found)  // 見つかったら1
-            {
-                found = false;
-                if (out_bestScore < tryScore && !Util_OwnEye.IsThis(tryLocation, taikyoku))
+                if (found)  // 見つかったら1
                 {
-                    out_bestScore = tryScore;
-                    out_bestLocation.SetLocation(tryLocation);
+                    found = false;
+                    if (out_bestScore < tryScore && !Util_OwnEye.IsThis(tryLocation, taikyoku))
+                    {
+                        out_bestScore = tryScore;
+                        out_bestLocation.SetLocation(tryLocation);
+                    }
                 }
             }
 
             //--------------------------------------------------------------------------
             // 西ネイバーを調べます。
-            if (!curStone_location.IsWestEnd()) // 西端でなければ。
             {
-                if (taikyoku.Goban.WestOf(curStone_location) == StoneColor.Empty)
-                {
-                    tryLocation.SetLocation(curStone_location.ToWest());
+                GobanPoint tryLocation = new GobanPointImpl(0, 0); // Gnugo1.2 では ti,tj という変数名。// 初期値は 2015-11-26 追加
+                int tryScore = 0;    // Gnugo1.2 では tval 変数。 隣位置の評価値。    // 2015-11-26 追加 0 で初期化。
+                bool found = false;
 
-                    int adjLiberty; // Gnugo1.2 では、グローバル変数 lib = 0 でした。
-                    Util_CountLiberty.Count(out adjLiberty, tryLocation, taikyoku.MyColor, taikyoku);
-                    tryScore = Util_SasiteNext.Evaluate_LibertyWeak(adjLiberty, expectedLiberty);
-                    found = true;
-                }
-                else
+                if (!myStone_location.IsWestEnd()) // 西端でなければ。
                 {
-                    if (
-                        taikyoku.Goban.WestOf(curStone_location) == taikyoku.MyColor
-                        &&
-                        taikyoku.MarkingBoard.CanDo_West(curStone_location) // 西側
-                        )
+                    if (taikyoku.Goban.WestOf(myStone_location) == StoneColor.Empty)
                     {
-                        if (Util_SasiteNext.FindStone_LibertyWeak(out tryLocation, out tryScore, curStone_location.ToWest(), expectedLiberty, taikyoku))
+                        tryLocation.SetLocation(myStone_location.ToWest());
+
+                        int futureLiberty; // Gnugo1.2 では、グローバル変数 lib = 0 でした。
+                        Util_CountLiberty.Count(out futureLiberty, tryLocation, taikyoku.MyColor, taikyoku);
+                        tryScore = Util_SasiteNext.Evaluate_LibertyWeak(futureLiberty, currentLiberty);
+                        found = true;
+                    }
+                    else
+                    {
+                        if (
+                            taikyoku.Goban.WestOf(myStone_location) == taikyoku.MyColor
+                            &&
+                            taikyoku.MarkingBoard.CanDo_West(myStone_location) // 西側
+                            )
                         {
-                            found = true;
+                            if (Util_SasiteNext.FindStone_LibertyWeak(out tryLocation, out tryScore, myStone_location.ToWest(), currentLiberty, taikyoku))
+                            {
+                                found = true;
+                            }
                         }
                     }
                 }
-            }
 
-            if (found)  // 見つかっていれば 1
-            {
-                found = false;
-                if (tryScore > out_bestScore && !Util_OwnEye.IsThis(tryLocation, taikyoku))
+                if (found)  // 見つかっていれば 1
                 {
-                    out_bestScore = tryScore;
-                    out_bestLocation.SetLocation(tryLocation);
+                    found = false;
+                    if (tryScore > out_bestScore && !Util_OwnEye.IsThis(tryLocation, taikyoku))
+                    {
+                        out_bestScore = tryScore;
+                        out_bestLocation.SetLocation(tryLocation);
+                    }
                 }
             }
 
             //--------------------------------------------------------------------------
             // 東ネイバーを調べます。
-            if (!curStone_location.IsEastEnd(taikyoku.GobanBounds))    // 東端でなければ。
             {
-                if (taikyoku.Goban.EastOf(curStone_location) == StoneColor.Empty)
-                {
-                    tryLocation.SetLocation(curStone_location.ToEast());
+                GobanPoint tryLocation = new GobanPointImpl(0, 0); // Gnugo1.2 では ti,tj という変数名。// 初期値は 2015-11-26 追加
+                int tryScore = 0;    // Gnugo1.2 では tval 変数。 隣位置の評価値。    // 2015-11-26 追加 0 で初期化。
+                bool found = false;
 
-                    int adjLiberty; // Gnugo1.2 では、グローバル変数 lib = 0 でした。
-                    Util_CountLiberty.Count(out adjLiberty, tryLocation, taikyoku.MyColor, taikyoku);
-                    tryScore = Util_SasiteNext.Evaluate_LibertyWeak(adjLiberty, expectedLiberty);
-                    found = true;
-                }
-                else
+                if (!myStone_location.IsEastEnd(taikyoku.GobanBounds))    // 東端でなければ。
                 {
-                    if
-                    (
-                        taikyoku.Goban.EastOf(curStone_location) == taikyoku.MyColor
-                        &&
-                        taikyoku.MarkingBoard.CanDo_East(curStone_location) // 東側
-                    )
+                    if (taikyoku.Goban.EastOf(myStone_location) == StoneColor.Empty)
                     {
-                        if (Util_SasiteNext.FindStone_LibertyWeak(out tryLocation, out tryScore, curStone_location.ToEast(), expectedLiberty, taikyoku))
+                        tryLocation.SetLocation(myStone_location.ToEast());
+
+                        int futureLiberty; // Gnugo1.2 では、グローバル変数 lib = 0 でした。
+                        Util_CountLiberty.Count(out futureLiberty, tryLocation, taikyoku.MyColor, taikyoku);
+                        tryScore = Util_SasiteNext.Evaluate_LibertyWeak(futureLiberty, currentLiberty);
+                        found = true;
+                    }
+                    else
+                    {
+                        if
+                        (
+                            taikyoku.Goban.EastOf(myStone_location) == taikyoku.MyColor
+                            &&
+                            taikyoku.MarkingBoard.CanDo_East(myStone_location) // 東側
+                        )
                         {
-                            found = true;
+                            if (Util_SasiteNext.FindStone_LibertyWeak(out tryLocation, out tryScore, myStone_location.ToEast(), currentLiberty, taikyoku))
+                            {
+                                found = true;
+                            }
                         }
                     }
                 }
-            }
 
-            if (found)  // Gnugo1.2では、見つかっていれば 1 でした。
-            {
-                found = false;
-                if (out_bestScore < tryScore && !Util_OwnEye.IsThis(tryLocation, taikyoku))
+                if (found)  // Gnugo1.2では、見つかっていれば 1 でした。
                 {
-                    out_bestScore = tryScore;
-                    out_bestLocation.SetLocation(tryLocation);
+                    found = false;
+                    if (out_bestScore < tryScore && !Util_OwnEye.IsThis(tryLocation, taikyoku))
+                    {
+                        out_bestScore = tryScore;
+                        out_bestLocation.SetLocation(tryLocation);
+                    }
                 }
             }
 

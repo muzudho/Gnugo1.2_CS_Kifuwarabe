@@ -70,9 +70,7 @@ namespace Grayscale.GPL.P407____CompBestMov.L500_BestMove
             Taikyoku taikyoku
         )
         {
-            GobanPoint tryLocation; // Gnugo1.2 では、 ti, tj という変数名。
             int bestScore;// Gnugo1.2 では val変数。評価値。
-            int tryScore; // Gnugo1.2 では tval変数。試して算出した評価値。
             int try_ = 0;   // トライの数
 
             // ムーブと評価値を初期化します。
@@ -89,32 +87,47 @@ namespace Grayscale.GPL.P407____CompBestMov.L500_BestMove
             Util_LibertyAtNode.CountAll(out libertyOfNodes, taikyoku.YourColor, taikyoku);
 
             // 相手のピースを取ったり、攻めたりする手を探します。
-            if (Util_FindWinner.FindBestLocation(out tryLocation, out tryScore, libertyOfNodes, taikyoku))
             {
-                if (bestScore < tryScore) // 新しい最善手を見つけたなら
+                GobanPoint foundLocation; // Gnugo1.2 では、 ti, tj という変数名。
+                int foundScore; // Gnugo1.2 では tval変数。試して算出した評価値。
+
+                if (Util_FindWinner.FindBestLocation(out foundLocation, out foundScore, libertyOfNodes, taikyoku))
                 {
-                    bestScore = tryScore; // 最善の評価値と置き場所を、更新します。
-                    out_bestMove.SetLocation(tryLocation);
+                    if (bestScore < foundScore) // 新しい最善手を見つけたなら
+                    {
+                        bestScore = foundScore; // 最善の評価値と置き場所を、更新します。
+                        out_bestMove.SetLocation(foundLocation);
+                    }
                 }
             }
 
             // もし脅かされていれば、幾つかのピースを守ります。
-            if (Util_SasiteSaver.FindLocation_LibertyWeak(out tryLocation, out tryScore, libertyOfNodes, taikyoku))
             {
-                if (bestScore < tryScore) // 新しい最善手を見つけたなら
+                GobanPoint foundLocation; // Gnugo1.2 では、 ti, tj という変数名。
+                int foundScore; // Gnugo1.2 では tval変数。試して算出した評価値。
+
+                if (Util_SasiteSaver.FindLocation_LibertyWeak(out foundLocation, out foundScore, libertyOfNodes, taikyoku))
                 {
-                    bestScore = tryScore; // 最善の評価値と置き場所を、更新します。
-                    out_bestMove.SetLocation(tryLocation);
+                    if (bestScore < foundScore) // 新しい最善手を見つけたなら
+                    {
+                        bestScore = foundScore; // 最善の評価値と置き場所を、更新します。
+                        out_bestMove.SetLocation(foundLocation);
+                    }
                 }
             }
 
             // 新しい動きのためのローカル・プレー・パターンに一致するか試します。
-            if (Util_FindOpeningZyoseki.FindPattern(out tryLocation, out tryScore, taikyoku))
             {
-                if (bestScore < tryScore) // 新しい最善手を見つけたなら
+                GobanPoint foundLocation; // Gnugo1.2 では、 ti, tj という変数名。
+                int foundScore; // Gnugo1.2 では tval変数。試して算出した評価値。
+
+                if (Util_FindOpeningZyoseki.FindPattern(out foundLocation, out foundScore, taikyoku))
                 {
-                    bestScore = tryScore; // 最善の評価値と置き場所を、更新します。
-                    out_bestMove.SetLocation(tryLocation);
+                    if (bestScore < foundScore) // 新しい最善手を見つけたなら
+                    {
+                        bestScore = foundScore; // 最善の評価値と置き場所を、更新します。
+                        out_bestMove.SetLocation(foundLocation);
+                    }
                 }
             }
 
