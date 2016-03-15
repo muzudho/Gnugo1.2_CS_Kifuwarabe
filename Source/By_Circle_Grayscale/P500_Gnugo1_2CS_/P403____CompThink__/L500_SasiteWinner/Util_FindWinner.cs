@@ -114,7 +114,7 @@ namespace Grayscale.GPL.P403____CompThink__.L500_SasiteWinner
                         {
                             if (libertyOfNodes[m,n] == 1)
                             {
-                                // 呼吸点は、どこか１方向しかない　アタリ　の状態です。
+                                // アタリの状態なので、積極的に狙っていきます。（呼吸点が、どこか１方向しかない状態）
 
                                 if (out_bestScore < 120) // 評価値が 120 未満なら
                                 {
@@ -128,22 +128,26 @@ namespace Grayscale.GPL.P403____CompThink__.L500_SasiteWinner
                             {
                                 // アタリではなくとも。
 
-                                // 呼吸点の数（２～３）に応じて。
-                                int sentakusi = libertyOfNodes[m, n];
+                                // 呼吸点の数（２～たくさん）に応じて。
+                                int opens = libertyOfNodes[m, n];
+
+                                // わたし（コンピューター）が置いたときと、相手（人間）に置き返されたときの
+                                // 全パターンについて
 
                                 // 配列のインデックスが 0,1 や、0,2 や、 1,2 など、異なるペア com,man になるもの
                                 // 全てについて。
-                                for (int iCom = 0; iCom < sentakusi; iCom++)//わたし（コンピューター）という想定
+                                for (int iCom = 0; iCom < opens; iCom++)//わたし（コンピューター）という想定
                                 {
-                                    for (int iMan = 0; iMan < sentakusi; iMan++)//相手（人間）という想定
+                                    for (int iMan = 0; iMan < opens; iMan++)//相手（人間）という想定
                                     {
                                         if (iCom != iMan)
                                         {
-                                            // どちらか一方の
+                                            // 置く位置
                                             GobanPoint adjLocation_com = adj3Locations[iCom];
+                                            // 置き返す位置
                                             GobanPoint adjLocation_man = adj3Locations[iMan];
 
-                                            // （連または）石のリバティ
+                                            // わたしの（連または）石のリバティ
                                             int liberty_com; // Gnugo1.2 では、グローバル変数 lib = 0 でした。
                                             Util_CountLiberty.Count(out liberty_com, adjLocation_com, taikyoku.MyColor, taikyoku);
 
@@ -168,7 +172,8 @@ namespace Grayscale.GPL.P403____CompThink__.L500_SasiteWinner
                                                 }
                                                 else
                                                 {
-                                                    // 位置 a に置く価値あり。位置 b （人間側）の呼吸点が少ないほどよい。
+                                                    // コンピューターが置いた手より、
+                                                    // 人間が置く手に、呼吸点が同じ、また多い手がない場合、置く価値あり。
                                                     tryScore = 120 - 20 * liberty_man;
                                                 }
                                             
